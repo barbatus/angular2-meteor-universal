@@ -10,7 +10,7 @@ import {Tasks} from '../../tasks';
 
 @Component({
   selector: 'task-list',
-  templateUrl: 'imports/task-list.html',
+  templateUrl: 'imports/templates/task-list.html',
   directives: [TaskView]
 })
 export class TaskList extends MeteorComponent implements OnChanges {
