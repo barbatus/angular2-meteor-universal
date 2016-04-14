@@ -9,8 +9,10 @@
   "license": "MIT",
   "dependencies": {
     "angular2-universal": "^0.90.1",
+    "fs": "0.0.2",
     "meteor-promise": "^0.6.3",
-    "preboot": "^2.0.4"
+    "preboot": "^2.0.4",
+    "url": "^0.11.0"
   },
   "peerDependencies": {
     "angular2": "^2.0.0-beta.12",
