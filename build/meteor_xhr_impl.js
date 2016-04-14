@@ -50,10 +50,10 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var fs = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"fs\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var path = __webpack_require__(5);
-	var compiler_1 = __webpack_require__(6);
-	var promise_1 = __webpack_require__(7);
+	var fs = __webpack_require__(5);
+	var path = __webpack_require__(6);
+	var compiler_1 = __webpack_require__(7);
+	var promise_1 = __webpack_require__(8);
 	var MeteorXHRImpl = (function (_super) {
 	    __extends(MeteorXHRImpl, _super);
 	    function MeteorXHRImpl(ngZone) {
@@ -102,16 +102,22 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	module.exports = require("fs");
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2/compiler");
+	module.exports = require("path");
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2/compiler");
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/src/facade/promise");
