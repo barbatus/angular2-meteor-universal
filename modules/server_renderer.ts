@@ -1,6 +1,6 @@
 'use strict';
 
-import {Promise} from 'meteor/promise';
+import {Promise} from 'meteor-promise';
 import 'angular2-universal-polyfills/dist/zone-node';
 import 'reflect-metadata';
 
