@@ -46,14 +46,14 @@
 
 	'use strict';
 	var promise_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"meteor/promise\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	__webpack_require__(8);
 	__webpack_require__(9);
-	__webpack_require__(10);
-	var angular2_universal_1 = __webpack_require__(11);
-	var core_1 = __webpack_require__(12);
-	var router_1 = __webpack_require__(13);
-	var compiler_1 = __webpack_require__(7);
+	var angular2_universal_1 = __webpack_require__(10);
+	var core_1 = __webpack_require__(11);
+	var router_1 = __webpack_require__(12);
+	var compiler_1 = __webpack_require__(6);
 	var angular2_meteor_1 = __webpack_require__(4);
-	var meteor_xhr_impl_1 = __webpack_require__(14);
+	var meteor_xhr_impl_1 = __webpack_require__(13);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
 	    }
@@ -127,45 +127,44 @@
 
 /***/ },
 /* 5 */,
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/compiler");
 
 /***/ },
-/* 8 */,
-/* 9 */
+/* 7 */,
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2-universal-polyfills/dist/zone-node");
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = require("reflect-metadata");
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2-universal");
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/core");
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/router");
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("./meteor_xhr_impl");

@@ -36,7 +36,7 @@ export class MeteorXHRImpl extends XHR {
 
   get basePath() {
     if (Meteor.isServer) {
-      return path.join(process.cwd(), 'assets', 'app');
+      return path.join(global.process.cwd(), 'assets', 'app');
     }
 
     return '/';

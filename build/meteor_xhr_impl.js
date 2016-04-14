@@ -44,16 +44,16 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var fs = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"fs\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var path = __webpack_require__(6);
-	var compiler_1 = __webpack_require__(7);
-	var promise_1 = __webpack_require__(8);
+	var path = __webpack_require__(5);
+	var compiler_1 = __webpack_require__(6);
+	var promise_1 = __webpack_require__(7);
 	var MeteorXHRImpl = (function (_super) {
 	    __extends(MeteorXHRImpl, _super);
 	    function MeteorXHRImpl(ngZone) {
@@ -81,7 +81,7 @@
 	    Object.defineProperty(MeteorXHRImpl.prototype, "basePath", {
 	        get: function () {
 	            if (Meteor.isServer) {
-	                return path.join(process.cwd(), 'assets', 'app');
+	                return path.join(global.process.cwd(), 'assets', 'app');
 	            }
 	            return '/';
 	        },
@@ -92,7 +92,7 @@
 	}(compiler_1.XHR));
 	exports.MeteorXHRImpl = MeteorXHRImpl;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 1 */,
@@ -102,22 +102,16 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = require("/Users/retina/Documents/projects/meteor/Angular2/angular2-meteor-universal/node_modules/process/browser.js");
+	module.exports = require("path");
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
 	module.exports = require("angular2/compiler");
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/src/facade/promise");
