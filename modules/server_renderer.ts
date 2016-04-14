@@ -5,6 +5,11 @@ import * as Promise from 'meteor-promise';
 Promise.Fiber = Fiber;
 const nativeThen = Promise.prototype.then;
 import 'angular2-universal-polyfills/dist/zone-node';
+// Zone sets own promise and overrides 'then' in the
+// global one (Meteor promise) if any, but we need
+// Meteor promise to be within Meteor environment.
+// TODO: take a look how to support Zone-aware promise
+// that works with fibers.
 Promise.prototype.then = nativeThen;
 global.Promise = Promise;
 
