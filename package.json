@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "angular2-universal": "^0.90.1",
+    "fibers": "^1.0.10",
     "fs": "0.0.2",
     "meteor-promise": "^0.6.3",
     "preboot": "^2.0.4",

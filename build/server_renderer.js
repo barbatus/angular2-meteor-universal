@@ -45,15 +45,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var meteor_promise_1 = __webpack_require__(9);
-	__webpack_require__(10);
+	var Fiber = __webpack_require__(9);
+	var Promise = __webpack_require__(10);
+	Promise.Fiber = Fiber;
 	__webpack_require__(11);
-	var angular2_universal_1 = __webpack_require__(12);
-	var core_1 = __webpack_require__(13);
-	var router_1 = __webpack_require__(14);
+	__webpack_require__(12);
+	var angular2_universal_1 = __webpack_require__(13);
+	var core_1 = __webpack_require__(14);
+	var router_1 = __webpack_require__(15);
 	var compiler_1 = __webpack_require__(7);
 	var angular2_meteor_1 = __webpack_require__(4);
-	var meteor_xhr_impl_1 = __webpack_require__(15);
+	var meteor_xhr_impl_1 = __webpack_require__(16);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
 	    }
@@ -63,7 +65,7 @@
 	        var bootloader = angular2_universal_1.Bootloader.create(options);
 	        var serialize = bootloader.serializeApplication();
 	        var html = null;
-	        new meteor_promise_1.Promise(function (resolve, reject) {
+	        new Promise(function (resolve, reject) {
 	            serialize.then(function (result) {
 	                html = result;
 	                resolve();
@@ -138,40 +140,46 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports = require("meteor-promise");
+	module.exports = require("fibers");
 
 /***/ },
 /* 10 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2-universal-polyfills/dist/zone-node");
+	module.exports = require("meteor-promise");
 
 /***/ },
 /* 11 */
 /***/ function(module, exports) {
 
-	module.exports = require("reflect-metadata");
+	module.exports = require("angular2-universal-polyfills/dist/zone-node");
 
 /***/ },
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2-universal");
+	module.exports = require("reflect-metadata");
 
 /***/ },
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2/core");
+	module.exports = require("angular2-universal");
 
 /***/ },
 /* 14 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2/router");
+	module.exports = require("angular2/core");
 
 /***/ },
 /* 15 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2/router");
+
+/***/ },
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = require("./meteor_xhr_impl");

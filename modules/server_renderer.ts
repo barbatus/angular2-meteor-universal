@@ -1,6 +1,8 @@
 'use strict';
 
-import {Promise} from 'meteor-promise';
+import * as Fiber from 'fibers';
+import * as Promise from 'meteor-promise';
+Promise.Fiber = Fiber;
 import 'angular2-universal-polyfills/dist/zone-node';
 import 'reflect-metadata';
 
