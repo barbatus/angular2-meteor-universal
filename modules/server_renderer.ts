@@ -3,8 +3,10 @@
 import * as Fiber from 'fibers';
 import * as Promise from 'meteor-promise';
 Promise.Fiber = Fiber;
+const nativeThen = Promise.prototype.then;
 import 'angular2-universal-polyfills/dist/zone-node';
-import 'reflect-metadata';
+Promise.prototype.then = nativeThen;
+global.Promise = Promise;
 
 import {
   NODE_ROUTER_PROVIDERS,
@@ -23,9 +25,10 @@ import {METEOR_PROVIDERS} from 'angular2-meteor';
 import {MeteorXHRImpl} from './meteor_xhr_impl';
 
 export class ServerRenderer {
-  static render(component) {
+  static render(component, providers) {
     let url = this.getCurrentUrl();
-    let options = this.getUniOptions(component, '/', url);
+    providers = providers || [];
+    let options = this.getUniOptions(component, providers, '/', url);
 
     let bootloader = Bootloader.create(options);
     let serialize = bootloader.serializeApplication();
@@ -55,7 +58,7 @@ export class ServerRenderer {
     return '/';
   }
 
-  private static getUniOptions(component, baseUrl?: string, url?: string) {
+  private static getUniOptions(component, providers, baseUrl?: string, url?: string) {
     let options = {
       buildClientScripts: true,
       providers: [
@@ -71,7 +74,8 @@ export class ServerRenderer {
         provide(REQUEST_URL, { useValue: url }),
         ROUTER_PROVIDERS,
         NODE_ROUTER_PROVIDERS,
-        METEOR_PROVIDERS
+        METEOR_PROVIDERS,
+        providers
       ],
       template: '<app />',
       preboot: {

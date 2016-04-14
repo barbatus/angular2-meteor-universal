@@ -44,24 +44,27 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	var Fiber = __webpack_require__(9);
 	var Promise = __webpack_require__(10);
 	Promise.Fiber = Fiber;
+	var nativeThen = Promise.prototype.then;
 	__webpack_require__(11);
-	__webpack_require__(12);
-	var angular2_universal_1 = __webpack_require__(13);
-	var core_1 = __webpack_require__(14);
-	var router_1 = __webpack_require__(15);
+	Promise.prototype.then = nativeThen;
+	global.Promise = Promise;
+	var angular2_universal_1 = __webpack_require__(12);
+	var core_1 = __webpack_require__(13);
+	var router_1 = __webpack_require__(14);
 	var compiler_1 = __webpack_require__(7);
 	var angular2_meteor_1 = __webpack_require__(4);
-	var meteor_xhr_impl_1 = __webpack_require__(16);
+	var meteor_xhr_impl_1 = __webpack_require__(15);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
 	    }
-	    ServerRenderer.render = function (component) {
+	    ServerRenderer.render = function (component, providers) {
 	        var url = this.getCurrentUrl();
-	        var options = this.getUniOptions(component, '/', url);
+	        providers = providers || [];
+	        var options = this.getUniOptions(component, providers, '/', url);
 	        var bootloader = angular2_universal_1.Bootloader.create(options);
 	        var serialize = bootloader.serializeApplication();
 	        var html = null;
@@ -85,7 +88,7 @@
 	    ServerRenderer.getCurrentUrl = function () {
 	        return '/';
 	    };
-	    ServerRenderer.getUniOptions = function (component, baseUrl, url) {
+	    ServerRenderer.getUniOptions = function (component, providers, baseUrl, url) {
 	        var options = {
 	            buildClientScripts: true,
 	            providers: [
@@ -101,7 +104,8 @@
 	                core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: url }),
 	                router_1.ROUTER_PROVIDERS,
 	                angular2_universal_1.NODE_ROUTER_PROVIDERS,
-	                angular2_meteor_1.METEOR_PROVIDERS
+	                angular2_meteor_1.METEOR_PROVIDERS,
+	                providers
 	            ],
 	            template: '<app />',
 	            preboot: {
@@ -117,6 +121,7 @@
 	}());
 	exports.ServerRenderer = ServerRenderer;
 
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 1 */,
@@ -158,28 +163,22 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = require("reflect-metadata");
+	module.exports = require("angular2-universal");
 
 /***/ },
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2-universal");
+	module.exports = require("angular2/core");
 
 /***/ },
 /* 14 */
 /***/ function(module, exports) {
 
-	module.exports = require("angular2/core");
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
 	module.exports = require("angular2/router");
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = require("./meteor_xhr_impl");

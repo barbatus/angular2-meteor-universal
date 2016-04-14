@@ -42,17 +42,51 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+	var angular2_meteor_auto_bootstrap_1 = __webpack_require__(3);
+	var angular2_meteor_1 = __webpack_require__(4);
+	function bootstrap(appComponentType, providers) {
+	    if (providers === void 0) { providers = null; }
+	    if (preboot)
+	        preboot.start();
+	    Meteor.defer(function () {
+	        Meteor.startup(function () {
+	            angular2_meteor_auto_bootstrap_1.bootstrap(appComponentType, providers).then(function (comprRef) {
+	                angular2_meteor_1.PromiseQueue.onResolve(function () {
+	                    if (preboot)
+	                        preboot.complete();
+	                });
+	            });
+	        });
+	    });
+	}
+	exports.bootstrap = bootstrap;
 	var ClientRenderer = (function () {
 	    function ClientRenderer() {
 	    }
-	    ClientRenderer.render = function (component) { };
+	    ClientRenderer.render = function (component, providers) {
+	        bootstrap(component, providers);
+	    };
 	    return ClientRenderer;
 	}());
 	exports.ClientRenderer = ClientRenderer;
 
+
+/***/ },
+/* 1 */,
+/* 2 */,
+/* 3 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2-meteor-auto-bootstrap");
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2-meteor");
 
 /***/ }
 /******/ ])));

@@ -6,8 +6,7 @@ module.exports = {
     'client_renderer': './modules/client_renderer.ts',
     'meteor_xhr_impl': './modules/meteor_xhr_impl.ts',
     'server_renderer': './modules/server_renderer.ts',
-    'angular_uni': './modules/angular_uni.ts',
-    'client': './modules/client.ts'
+    'angular_uni': './modules/angular_uni.ts'
   },
   output: {
     // We use CommonJS because of Meteor 1.3 specification that uses it

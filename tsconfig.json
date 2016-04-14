@@ -13,7 +13,6 @@
     "outDir": "./build"
   },
   "files": [
-    "modules/client.ts",
     "modules/angular_uni.ts",
     "modules/client_renderer.ts",
     "modules/server_renderer.ts",

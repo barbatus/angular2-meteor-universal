@@ -1,8 +1,7 @@
 import 'angular2-universal-polyfills/dist/zone-node';
-import 'reflect-metadata';
 export declare class ServerRenderer {
-    static render(component: any): any;
+    static render(component: any, providers: any): any;
     private static getRouter();
     private static getCurrentUrl();
-    private static getUniOptions(component, baseUrl?, url?);
+    private static getUniOptions(component, providers, baseUrl?, url?);
 }
