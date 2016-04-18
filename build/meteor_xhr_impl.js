@@ -44,16 +44,14 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var fs = __webpack_require__(5);
-	var path = __webpack_require__(6);
-	var compiler_1 = __webpack_require__(7);
-	var promise_1 = __webpack_require__(8);
+	var compiler_1 = __webpack_require__(5);
+	var promise_1 = __webpack_require__(6);
 	var MeteorXHRImpl = (function (_super) {
 	    __extends(MeteorXHRImpl, _super);
 	    function MeteorXHRImpl(ngZone) {
@@ -61,38 +59,19 @@
 	        this.ngZone = ngZone;
 	    }
 	    MeteorXHRImpl.prototype.get = function (templateUrl) {
-	        var _this = this;
 	        var completer = promise_1.PromiseWrapper.completer();
 	        if (Meteor.isServer) {
-	            var fullPath_1 = path.join(this.basePath, templateUrl);
+	            var data_1 = Assets.getText(templateUrl);
 	            this.ngZone.run(function () {
-	                fs.readFile(fullPath_1, function (err, data) {
-	                    if (err) {
-	                        return completer.reject("Failed to load " + templateUrl + " with error " + err);
-	                    }
-	                    _this.ngZone.run(function () {
-	                        completer.resolve(data.toString());
-	                    });
-	                });
+	                completer.resolve(data_1);
 	            });
 	        }
 	        return completer.promise;
 	    };
-	    Object.defineProperty(MeteorXHRImpl.prototype, "basePath", {
-	        get: function () {
-	            if (Meteor.isServer) {
-	                return path.join(global.process.cwd(), 'assets', 'app');
-	            }
-	            return '/';
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
 	    return MeteorXHRImpl;
 	}(compiler_1.XHR));
 	exports.MeteorXHRImpl = MeteorXHRImpl;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 1 */,
@@ -102,22 +81,10 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	module.exports = require("fs");
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = require("path");
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
 	module.exports = require("angular2/compiler");
 
 /***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/src/facade/promise");

@@ -45,19 +45,24 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	var Fiber = __webpack_require__(9);
-	var Promise = __webpack_require__(10);
+	var Fiber = __webpack_require__(7);
+	var Promise = __webpack_require__(8);
 	Promise.Fiber = Fiber;
 	var nativeThen = Promise.prototype.then;
-	__webpack_require__(11);
+	__webpack_require__(9);
+	// Zone sets own promise and overrides 'then' in the
+	// global one (Meteor promise) if any, but we need
+	// Meteor promise to be within Meteor environment.
+	// TODO: take a look how to support Zone-aware promise
+	// that works with fibers.
 	Promise.prototype.then = nativeThen;
 	global.Promise = Promise;
-	var angular2_universal_1 = __webpack_require__(12);
-	var core_1 = __webpack_require__(13);
-	var router_1 = __webpack_require__(14);
-	var compiler_1 = __webpack_require__(7);
+	var angular2_universal_1 = __webpack_require__(10);
+	var core_1 = __webpack_require__(11);
+	var router_1 = __webpack_require__(12);
+	var compiler_1 = __webpack_require__(5);
 	var angular2_meteor_1 = __webpack_require__(4);
-	var meteor_xhr_impl_1 = __webpack_require__(15);
+	var meteor_xhr_impl_1 = __webpack_require__(13);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
 	    }
@@ -133,52 +138,50 @@
 	module.exports = require("angular2-meteor");
 
 /***/ },
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/compiler");
 
 /***/ },
-/* 8 */,
-/* 9 */
+/* 6 */,
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = require("fibers");
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports) {
 
 	module.exports = require("meteor-promise");
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2-universal-polyfills/dist/zone-node");
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2-universal");
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/core");
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/router");
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("./meteor_xhr_impl");

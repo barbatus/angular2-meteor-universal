@@ -6,17 +6,48 @@ import {PromiseQueue} from 'angular2-meteor';
 
 export function bootstrap(appComponentType: any,
   providers: Array<Type | Provider | any[]> = null) {
-  if (preboot) preboot.start();
+  Preboot.start();
 
   Meteor.defer(() => {
     Meteor.startup(() => {
       origBoot(appComponentType, providers).then(comprRef => {
         PromiseQueue.onResolve(() => {
-          if (preboot) preboot.complete();
+          Preboot.complete();
         });
       });
     });
   });
+}
+
+declare interface PrebootRef {
+  start();
+  complete();
+}
+
+class Preboot {
+  private static _prebootRef: PrebootRef;
+
+  static start() {
+    this.init();
+
+    if (this._prebootRef) {
+      this._prebootRef.start();
+    }
+  }
+
+  static complete() {
+    this.init();
+
+    if (this._prebootRef) {
+      this._prebootRef.complete();
+    }
+  }
+
+  static init() {
+    if (!this._prebootRef) {
+      this._prebootRef = window['reboot'];
+    }
+  }
 }
 
 export class ClientRenderer {

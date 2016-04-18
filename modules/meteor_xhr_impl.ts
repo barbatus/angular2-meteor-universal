@@ -16,29 +16,12 @@ export class MeteorXHRImpl extends XHR {
   get(templateUrl: string): Promise<string> {
     const completer: PromiseCompleter<string> = PromiseWrapper.completer();
     if (Meteor.isServer) {
-      const fullPath = path.join(this.basePath, templateUrl);
-
+      const data = Assets.getText(templateUrl);
       this.ngZone.run(() => {
-        fs.readFile(fullPath, (err, data) => {
-          if (err) {
-            return completer.reject(`Failed to load ${templateUrl} with error ${err}`);
-          }
-
-          this.ngZone.run(() => {
-            completer.resolve(data.toString());
-          });
-        });
+        completer.resolve(data);
       });
     }
 
     return completer.promise;
-  }
-
-  get basePath() {
-    if (Meteor.isServer) {
-      return path.join(global.process.cwd(), 'assets', 'app');
-    }
-
-    return '/';
   }
 }

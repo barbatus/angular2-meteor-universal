@@ -4,5 +4,4 @@ export declare class MeteorXHRImpl extends XHR {
     ngZone: NgZone;
     constructor(ngZone: NgZone);
     get(templateUrl: string): Promise<string>;
-    basePath: string;
 }

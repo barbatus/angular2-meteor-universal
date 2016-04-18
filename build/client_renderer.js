@@ -49,20 +49,40 @@
 	var angular2_meteor_1 = __webpack_require__(4);
 	function bootstrap(appComponentType, providers) {
 	    if (providers === void 0) { providers = null; }
-	    if (preboot)
-	        preboot.start();
+	    Preboot.start();
 	    Meteor.defer(function () {
 	        Meteor.startup(function () {
 	            angular2_meteor_auto_bootstrap_1.bootstrap(appComponentType, providers).then(function (comprRef) {
 	                angular2_meteor_1.PromiseQueue.onResolve(function () {
-	                    if (preboot)
-	                        preboot.complete();
+	                    Preboot.complete();
 	                });
 	            });
 	        });
 	    });
 	}
 	exports.bootstrap = bootstrap;
+	var Preboot = (function () {
+	    function Preboot() {
+	    }
+	    Preboot.start = function () {
+	        this.init();
+	        if (this._prebootRef) {
+	            this._prebootRef.start();
+	        }
+	    };
+	    Preboot.complete = function () {
+	        this.init();
+	        if (this._prebootRef) {
+	            this._prebootRef.complete();
+	        }
+	    };
+	    Preboot.init = function () {
+	        if (!this._prebootRef) {
+	            this._prebootRef = window['reboot'];
+	        }
+	    };
+	    return Preboot;
+	}());
 	var ClientRenderer = (function () {
 	    function ClientRenderer() {
 	    }

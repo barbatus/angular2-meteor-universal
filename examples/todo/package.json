@@ -3,7 +3,7 @@
     "angular2": "2.0.0-beta.12",
     "angular2-meteor": "https://github.com/barbatus/angular2-meteor",
     "angular2-meteor-auto-bootstrap": "https://github.com/barbatus/angular2-meteor-auto-bootstrap",
-    "angular2-meteor-universal": "https://github.com/barbatus/angular2-meteor-universal",
+    "angular2-meteor-universal": "file:../..",
     "angular2-universal": "^0.90.1",
     "es6-shim": "^0.35.0",
     "fibers": "^1.0.10",
@@ -16,5 +16,8 @@
     "url": "^0.11.0",
     "zone.js": "^0.6.6"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "linklocal": "^2.6.0"
+  }
 }
