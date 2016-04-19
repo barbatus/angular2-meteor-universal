@@ -13,7 +13,7 @@
     "fs": "0.0.2",
     "meteor-node-stubs": "^0.2.3",
     "meteor-promise": "^0.6.3",
-    "parse5": "^2.1.5",
+    "parse5": "^1.5.0",
     "path": "^0.12.7",
     "preboot": "^2.0.4"
   },
