@@ -55,7 +55,7 @@
 	    Meteor.defer(function () {
 	        Meteor.startup(function () {
 	            angular2_meteor_auto_bootstrap_1.bootstrap(appComponentType, providers).then(function (comprRef) {
-	                angular2_meteor_1.PromiseQueue.onResolve(function () {
+	                angular2_meteor_1.PromiseQ.onAll(function () {
 	                    Preboot.complete();
 	                });
 	            });
