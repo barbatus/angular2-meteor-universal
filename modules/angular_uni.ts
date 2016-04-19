@@ -3,9 +3,9 @@
 import {Type} from 'angular2/core';
 
 export class AngularUni {
-  static render(component: Type) {
+  static render(component: Type, providers?) {
     const renderer = AngularUni.getRenderer();
-    renderer.render(component);
+    renderer.render(component, providers);
   }
 
   static getRenderer() {

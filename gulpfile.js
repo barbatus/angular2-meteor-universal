@@ -15,7 +15,7 @@ gulp.task("typings",function(){
 
 // Build TypeScript.
 gulp.task("webpack", function(callback) {
-  var build = gulp.src(["modules/*"])
+  var build = gulp.src("modules")
     .pipe(webpack(require("./webpack.config.js")))
     .pipe(gulp.dest("build/"));
 

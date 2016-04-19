@@ -45,11 +45,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	var Fiber = __webpack_require__(7);
-	var Promise = __webpack_require__(8);
+	var Fiber = __webpack_require__(12);
+	var Promise = __webpack_require__(13);
 	Promise.Fiber = Fiber;
 	var nativeThen = Promise.prototype.then;
-	__webpack_require__(9);
+	__webpack_require__(14);
 	// Zone sets own promise and overrides 'then' in the
 	// global one (Meteor promise) if any, but we need
 	// Meteor promise to be within Meteor environment.
@@ -57,19 +57,20 @@
 	// that works with fibers.
 	Promise.prototype.then = nativeThen;
 	global.Promise = Promise;
-	var angular2_universal_1 = __webpack_require__(10);
-	var core_1 = __webpack_require__(11);
-	var router_1 = __webpack_require__(12);
-	var compiler_1 = __webpack_require__(5);
+	var angular2_universal_1 = __webpack_require__(15);
+	var core_1 = __webpack_require__(6);
+	var router_1 = __webpack_require__(7);
+	var compiler_1 = __webpack_require__(10);
+	var directive_resolver_1 = __webpack_require__(16);
+	var dom_adapter_1 = __webpack_require__(17);
 	var angular2_meteor_1 = __webpack_require__(4);
-	var meteor_xhr_impl_1 = __webpack_require__(13);
+	var meteor_xhr_impl_1 = __webpack_require__(18);
+	var router_2 = __webpack_require__(5);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
 	    }
-	    ServerRenderer.render = function (component, providers) {
-	        var url = this.getCurrentUrl();
-	        providers = providers || [];
-	        var options = this.getUniOptions(component, providers, '/', url);
+	    ServerRenderer.render = function (component, providers, customOptions) {
+	        var options = this.getUniOptions(component, providers, customOptions);
 	        var bootloader = angular2_universal_1.Bootloader.create(options);
 	        var serialize = bootloader.serializeApplication();
 	        var html = null;
@@ -79,21 +80,24 @@
 	                resolve();
 	            }, reject);
 	        }).await();
-	        var router = this.getRouter();
-	        if (router) {
-	            var ssrContext = router.ssrContext.get();
-	            ssrContext.setHtml(html);
-	        }
+	        router_2.Router.render(html);
 	        return html;
 	    };
-	    ServerRenderer.getRouter = function () {
-	        var flowSSR = Package['kadira:flow-router-ssr'];
-	        return flowSSR && flowSSR.FlowRouter;
+	    ServerRenderer.createServerDoc = function (component) {
+	        var selector = new directive_resolver_1.DirectiveResolver().resolve(component).selector;
+	        var serverDoc = dom_adapter_1.DOM.createHtmlDocument();
+	        var el = dom_adapter_1.DOM.createElement(selector);
+	        dom_adapter_1.DOM.appendChild(serverDoc.body, el);
+	        return serverDoc;
 	    };
-	    ServerRenderer.getCurrentUrl = function () {
-	        return '/';
-	    };
-	    ServerRenderer.getUniOptions = function (component, providers, baseUrl, url) {
+	    ServerRenderer.getUniOptions = function (component, providers, customOptions) {
+	        providers = providers || [];
+	        customOptions = customOptions || {};
+	        var layoutUrl = customOptions.layout;
+	        var serverDoc = null;
+	        if (!layoutUrl) {
+	            serverDoc = this.createServerDoc(component);
+	        }
 	        var options = {
 	            buildClientScripts: true,
 	            providers: [
@@ -102,17 +106,18 @@
 	                        return new meteor_xhr_impl_1.MeteorXHRImpl(ngZone);
 	                    },
 	                    deps: [core_1.NgZone]
-	                })
-	            ],
-	            componentProviders: [
-	                core_1.provide(router_1.APP_BASE_HREF, { useValue: baseUrl }),
-	                core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: url }),
-	                router_1.ROUTER_PROVIDERS,
+	                }),
+	                angular2_universal_1.NODE_PLATFORM_PIPES,
 	                angular2_universal_1.NODE_ROUTER_PROVIDERS,
+	                angular2_universal_1.NODE_HTTP_PROVIDERS,
 	                angular2_meteor_1.METEOR_PROVIDERS,
-	                providers
+	                router_2.Router.baseHrefProvider,
+	                core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: router_2.Router.reqUrl }),
+	                core_1.provide(router_1.LocationStrategy, {
+	                    useClass: router_1.PathLocationStrategy
+	                }),
 	            ],
-	            template: '<app />',
+	            template: serverDoc,
 	            preboot: {
 	                start: false,
 	                debug: true,
@@ -139,49 +144,121 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = require("angular2/compiler");
+	'use strict';
+	var core_1 = __webpack_require__(6);
+	var router_1 = __webpack_require__(7);
+	var Router = (function () {
+	    function Router() {
+	    }
+	    Router.render = function (html) {
+	        if (this.flowRouter) {
+	            var ssrContext = this.flowRouter.ssrContext.get();
+	            ssrContext.setHtml(html);
+	        }
+	    };
+	    Object.defineProperty(Router, "baseHrefProvider", {
+	        get: function () {
+	            return core_1.provide(router_1.APP_BASE_HREF, { useValue: this.baseUrl });
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Router, "flowRouter", {
+	        get: function () {
+	            var flowSSR = Package['kadira:flow-router-ssr'];
+	            return flowSSR && flowSSR.FlowRouter;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Router, "reqUrl", {
+	        get: function () {
+	            if (this.flowRouter) {
+	                var current = this.flowRouter.current();
+	                return current.path;
+	            }
+	            return this.baseUrl;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Router, "baseUrl", {
+	        get: function () {
+	            if (this.flowRouter) {
+	                var current = this.flowRouter.current();
+	                return current.route.pathDef;
+	            }
+	            return '/';
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return Router;
+	}());
+	exports.Router = Router;
+
 
 /***/ },
-/* 6 */,
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = require("fibers");
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	module.exports = require("meteor-promise");
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	module.exports = require("angular2-universal-polyfills/dist/zone-node");
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	module.exports = require("angular2-universal");
-
-/***/ },
-/* 11 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/core");
 
 /***/ },
-/* 12 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = require("angular2/router");
 
 /***/ },
+/* 8 */,
+/* 9 */,
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2/compiler");
+
+/***/ },
+/* 11 */,
+/* 12 */
+/***/ function(module, exports) {
+
+	module.exports = require("fibers");
+
+/***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	module.exports = require("meteor-promise");
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2-universal-polyfills/dist/zone-node");
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2-universal");
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2/src/core/linker/directive_resolver");
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	module.exports = require("angular2/src/platform/dom/dom_adapter");
+
+/***/ },
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = require("./meteor_xhr_impl");

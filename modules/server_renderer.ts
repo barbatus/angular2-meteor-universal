@@ -20,20 +20,25 @@ import {
   REQUEST_URL,
   BASE_URL,
   queryParamsToBoolean,
-  Bootloader
+  Bootloader,
+  NodePlatformLocation,
 } from 'angular2-universal';
 
-import {provide, Provider, NgZone} from 'angular2/core';
-import {ROUTER_PROVIDERS, APP_BASE_HREF} from 'angular2/router';
+import {provide, Provider, NgZone, Type} from 'angular2/core';
+import {ROUTER_PROVIDERS, APP_BASE_HREF,
+  LocationStrategy, PathLocationStrategy} from 'angular2/router';
 import {XHR} from 'angular2/compiler';
+import {DirectiveResolver} from 'angular2/src/core/linker/directive_resolver';
+import {DOM} from 'angular2/src/platform/dom/dom_adapter';
+
 import {METEOR_PROVIDERS} from 'angular2-meteor';
 import {MeteorXHRImpl} from './meteor_xhr_impl';
+import {Router} from './router';
 
 export class ServerRenderer {
-  static render(component, providers) {
-    let url = this.getCurrentUrl();
-    providers = providers || [];
-    let options = this.getUniOptions(component, providers, '/', url);
+  static render(component, providers?, customOptions?) {
+    let options = this.getUniOptions(
+      component, providers, customOptions);
 
     let bootloader = Bootloader.create(options);
     let serialize = bootloader.serializeApplication();
@@ -45,25 +50,29 @@ export class ServerRenderer {
       }, reject);
     }).await();
 
-    let router = this.getRouter();
-    if (router) {
-      var ssrContext = router.ssrContext.get();
-      ssrContext.setHtml(html);
-    }
+    Router.render(html);
 
     return html;
   }
 
-  private static getRouter() {
-    const flowSSR = Package['kadira:flow-router-ssr'];
-    return flowSSR && flowSSR.FlowRouter;
+  private static createServerDoc(component: Type) {
+    let selector = new DirectiveResolver().resolve(component).selector;
+    let serverDoc = DOM.createHtmlDocument();
+    let el = DOM.createElement(selector);
+    DOM.appendChild(serverDoc.body, el);
+    return serverDoc;
   }
 
-  private static getCurrentUrl() {
-    return '/';
-  }
+  private static getUniOptions(component, providers?, customOptions?) {
+    providers = providers || [];
+    customOptions = customOptions || {};
 
-  private static getUniOptions(component, providers, baseUrl?: string, url?: string) {
+    const layoutUrl = customOptions.layout;
+    let serverDoc = null;
+    if (!layoutUrl) {
+      serverDoc = this.createServerDoc(component);
+    }
+
     let options = {
       buildClientScripts: true,
       providers: [
@@ -72,17 +81,19 @@ export class ServerRenderer {
             return new MeteorXHRImpl(ngZone);
           },
           deps: [NgZone]
-        })
-      ],
-      componentProviders: [
-        provide(APP_BASE_HREF, { useValue: baseUrl }),
-        provide(REQUEST_URL, { useValue: url }),
-        ROUTER_PROVIDERS,
+        }),
+        NODE_PLATFORM_PIPES,
         NODE_ROUTER_PROVIDERS,
+        NODE_HTTP_PROVIDERS,
         METEOR_PROVIDERS,
-        providers
+        Router.baseHrefProvider,
+        provide(REQUEST_URL, { useValue: Router.reqUrl }),
+        provide(LocationStrategy, {
+          useClass: PathLocationStrategy
+        }),
+        //providers
       ],
-      template: '<app />',
+      template: serverDoc,
       preboot: {
         start: false,
         debug: true,

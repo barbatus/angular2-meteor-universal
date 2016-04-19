@@ -48,9 +48,9 @@
 	var AngularUni = (function () {
 	    function AngularUni() {
 	    }
-	    AngularUni.render = function (component) {
+	    AngularUni.render = function (component, providers) {
 	        var renderer = AngularUni.getRenderer();
-	        renderer.render(component);
+	        renderer.render(component, providers);
 	    };
 	    AngularUni.getRenderer = function () {
 	        if (Meteor.isServer) {

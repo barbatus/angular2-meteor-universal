@@ -4,10 +4,12 @@ import {Type, Provider} from 'angular2/core';
 import {bootstrap as origBoot} from 'angular2-meteor-auto-bootstrap';
 import {PromiseQueue} from 'angular2-meteor';
 
-export function bootstrap(appComponentType: any,
-  providers: Array<Type | Provider | any[]> = null) {
-  Preboot.start();
+import {Router} from './router';
 
+export function bootstrap(appComponentType: any, providers: Array<Type | Provider | any[]> = null) {
+  providers = (providers || []).concat(Router.baseHrefProvider);
+
+  Preboot.start();
   Meteor.defer(() => {
     Meteor.startup(() => {
       origBoot(appComponentType, providers).then(comprRef => {
@@ -45,13 +47,13 @@ class Preboot {
 
   static init() {
     if (!this._prebootRef) {
-      this._prebootRef = window['reboot'];
+      this._prebootRef = global['preboot'];
     }
   }
 }
 
 export class ClientRenderer {
-  static render(component, providers) {
+  static render(component, providers?) {
     bootstrap(component, providers);
   }
 }

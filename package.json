@@ -10,11 +10,9 @@
   "dependencies": {
     "angular2-universal": "^0.90.1",
     "fibers": "^1.0.10",
-    "fs": "0.0.2",
     "meteor-promise": "^0.6.3",
     "preboot": "^2.0.4",
-    "url": "^0.11.0",
-    "meteor-node-stubs": "^0.2.3"
+    "fs": "0.0.2"
   },
   "peerDependencies": {
     "angular2": "^2.0.0-beta.12",
@@ -35,7 +33,7 @@
     "run-sequence": "^1.1.5",
     "ts-loader": "^0.8.0",
     "tslint": "^3.6.0",
-    "typescript": "^1.7.5",
+    "typescript": "1.8.5",
     "typings": "^0.7.7",
     "webpack": "^1.12.12",
     "webpack-externals-plugin": "^1.0.0",

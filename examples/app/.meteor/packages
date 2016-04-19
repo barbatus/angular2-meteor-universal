@@ -19,3 +19,7 @@ barbatus:angular2-compilers
 standard-minifier-css
 barbatus:angular2-runtime
 kadira:flow-router-ssr
+accounts-password
+anti:fake
+reactive-var
+less
