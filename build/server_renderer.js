@@ -111,6 +111,7 @@
 	                angular2_universal_1.NODE_ROUTER_PROVIDERS,
 	                angular2_universal_1.NODE_HTTP_PROVIDERS,
 	                angular2_meteor_1.METEOR_PROVIDERS,
+	                core_1.provide(angular2_universal_1.ORIGIN_URL, { useValue: global.process.env.ENV_VARIABLE }),
 	                router_2.Router.baseHrefProvider,
 	                core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: router_2.Router.reqUrl }),
 	                core_1.provide(router_1.LocationStrategy, {

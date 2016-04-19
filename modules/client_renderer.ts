@@ -2,7 +2,7 @@
 
 import {Type, Provider} from 'angular2/core';
 import {bootstrap as origBoot} from 'angular2-meteor-auto-bootstrap';
-import {PromiseQueue} from 'angular2-meteor';
+import {PromiseQ} from 'angular2-meteor';
 
 import {Router} from './router';
 
@@ -13,7 +13,7 @@ export function bootstrap(appComponentType: any, providers: Array<Type | Provide
   Meteor.defer(() => {
     Meteor.startup(() => {
       origBoot(appComponentType, providers).then(comprRef => {
-        PromiseQueue.onResolve(() => {
+        PromiseQ.onAll(() => {
           Preboot.complete();
         });
       });

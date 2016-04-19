@@ -22,6 +22,7 @@ import {
   queryParamsToBoolean,
   Bootloader,
   NodePlatformLocation,
+  ORIGIN_URL
 } from 'angular2-universal';
 
 import {provide, Provider, NgZone, Type} from 'angular2/core';
@@ -86,6 +87,7 @@ export class ServerRenderer {
         NODE_ROUTER_PROVIDERS,
         NODE_HTTP_PROVIDERS,
         METEOR_PROVIDERS,
+        provide(ORIGIN_URL, { useValue: global.process.env.ENV_VARIABLE }),
         Router.baseHrefProvider,
         provide(REQUEST_URL, { useValue: Router.reqUrl }),
         provide(LocationStrategy, {
