@@ -68,6 +68,7 @@
 	var router_2 = __webpack_require__(5);
 	var ServerRenderer = (function () {
 	    function ServerRenderer() {
+	        this._bootloader = null;
 	    }
 	    ServerRenderer.render = function (component, providers, customOptions) {
 	        var options = this.getUniOptions(component, providers, customOptions);
@@ -81,6 +82,7 @@
 	            }, reject);
 	        }).await();
 	        router_2.Router.render(html);
+	        bootloader.dispose();
 	        return html;
 	    };
 	    ServerRenderer.createServerDoc = function (component) {
@@ -108,15 +110,14 @@
 	                    deps: [core_1.NgZone]
 	                }),
 	                angular2_universal_1.NODE_PLATFORM_PIPES,
+	                router_1.ROUTER_PROVIDERS,
 	                angular2_universal_1.NODE_ROUTER_PROVIDERS,
 	                angular2_universal_1.NODE_HTTP_PROVIDERS,
+	                angular2_universal_1.NODE_LOCATION_PROVIDERS,
 	                angular2_meteor_1.METEOR_PROVIDERS,
-	                core_1.provide(angular2_universal_1.ORIGIN_URL, { useValue: global.process.env.ENV_VARIABLE }),
+	                core_1.provide(angular2_universal_1.ORIGIN_URL, { useValue: global.process.env.ROOT_URL }),
 	                router_2.Router.baseHrefProvider,
 	                core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: router_2.Router.reqUrl }),
-	                core_1.provide(router_1.LocationStrategy, {
-	                    useClass: router_1.PathLocationStrategy
-	                }),
 	            ],
 	            template: serverDoc,
 	            preboot: {
@@ -178,7 +179,7 @@
 	        get: function () {
 	            if (this.flowRouter) {
 	                var current = this.flowRouter.current();
-	                return current.path;
+	                return current.path.replace(this.baseUrl, '') || '/';
 	            }
 	            return this.baseUrl;
 	        },

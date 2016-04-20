@@ -22,12 +22,13 @@ import {
   queryParamsToBoolean,
   Bootloader,
   NodePlatformLocation,
-  ORIGIN_URL
+  ORIGIN_URL,
+  NODE_LOCATION_PROVIDERS
 } from 'angular2-universal';
 
 import {provide, Provider, NgZone, Type} from 'angular2/core';
 import {ROUTER_PROVIDERS, APP_BASE_HREF,
-  LocationStrategy, PathLocationStrategy} from 'angular2/router';
+  LocationStrategy, HashLocationStrategy} from 'angular2/router';
 import {XHR} from 'angular2/compiler';
 import {DirectiveResolver} from 'angular2/src/core/linker/directive_resolver';
 import {DOM} from 'angular2/src/platform/dom/dom_adapter';
@@ -52,6 +53,8 @@ export class ServerRenderer {
     }).await();
 
     Router.render(html);
+
+    bootloader.dispose();
 
     return html;
   }
@@ -84,16 +87,14 @@ export class ServerRenderer {
           deps: [NgZone]
         }),
         NODE_PLATFORM_PIPES,
+        ROUTER_PROVIDERS,
         NODE_ROUTER_PROVIDERS,
         NODE_HTTP_PROVIDERS,
+        NODE_LOCATION_PROVIDERS,
         METEOR_PROVIDERS,
-        provide(ORIGIN_URL, { useValue: global.process.env.ENV_VARIABLE }),
+        provide(ORIGIN_URL, { useValue: global.process.env.ROOT_URL }),
         Router.baseHrefProvider,
         provide(REQUEST_URL, { useValue: Router.reqUrl }),
-        provide(LocationStrategy, {
-          useClass: PathLocationStrategy
-        }),
-        //providers
       ],
       template: serverDoc,
       preboot: {

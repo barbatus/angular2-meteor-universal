@@ -146,7 +146,7 @@
 	        get: function () {
 	            if (this.flowRouter) {
 	                var current = this.flowRouter.current();
-	                return current.path;
+	                return current.path.replace(this.baseUrl, '') || '/';
 	            }
 	            return this.baseUrl;
 	        },
