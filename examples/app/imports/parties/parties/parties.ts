@@ -23,13 +23,13 @@ export class PartiesCmp extends MeteorComponent {
 
   constructor() {
     super();
-    this.subscribe('parties', 'Palo Alto');
+    //this.subscribe('parties', 'Palo Alto');
     this.location = new ReactiveVar('Palo Alto');
 
-    this.autorun(() => {
+    //this.autorun(() => {
       var selector = { location: this.location.get() };
-      this.parties = Parties.find(selector);
-    }, true);
+      this.parties = [{name: 'test', location: 'test', description: 'test'}];
+    //}, true);
   }
 
   searchLocation(location) {

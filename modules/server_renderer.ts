@@ -1,17 +1,19 @@
 'use strict';
 
 import * as Fiber from 'fibers';
-import * as Promise from 'meteor-promise';
-Promise.Fiber = Fiber;
-const nativeThen = Promise.prototype.then;
+import * as MeteorPromise from 'meteor-promise';
+MeteorPromise.Fiber = Fiber;
+
+const nativeThen = MeteorPromise.prototype.then;
 import 'angular2-universal-polyfills/dist/zone-node';
+MeteorPromise.prototype.then = nativeThen;
+
 // Zone sets own promise and overrides 'then' in the
 // global one (Meteor promise) if any, but we need
 // Meteor promise to be within Meteor environment.
 // TODO: take a look how to support Zone-aware promise
 // that works with fibers.
-Promise.prototype.then = nativeThen;
-global.Promise = Promise;
+//global.Promise = Promise;
 
 import {
   NODE_ROUTER_PROVIDERS,
@@ -45,7 +47,7 @@ export class ServerRenderer {
     let bootloader = Bootloader.create(options);
     let serialize = bootloader.serializeApplication();
     let html = null;
-    new Promise(function(resolve, reject) {
+    new MeteorPromise(function(resolve, reject) {
       serialize.then(result => {
         html = result;
         resolve();
