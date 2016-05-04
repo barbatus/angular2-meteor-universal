@@ -1,6 +1,4 @@
 'use strict';
-var core_1 = require('angular2/core');
-var router_1 = require('angular2/router');
 var Router = (function () {
     function Router() {
     }
@@ -10,13 +8,6 @@ var Router = (function () {
             ssrContext.setHtml(html);
         }
     };
-    Object.defineProperty(Router, "baseHrefProvider", {
-        get: function () {
-            return core_1.provide(router_1.APP_BASE_HREF, { useValue: this.baseUrl });
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Router, "flowRouter", {
         get: function () {
             var flowSSR = Package['kadira:flow-router-ssr'];

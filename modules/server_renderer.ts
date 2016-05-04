@@ -13,7 +13,7 @@ MeteorPromise.prototype.then = nativeThen;
 // Meteor promise to be within Meteor environment.
 // TODO: take a look how to support Zone-aware promise
 // that works with fibers.
-//global.Promise = Promise;
+global.Promise = Promise;
 
 import {
   NODE_ROUTER_PROVIDERS,
@@ -29,10 +29,10 @@ import {
 } from 'angular2-universal';
 
 import {provide, Provider, NgZone, Type} from 'angular2/core';
-import {ROUTER_PROVIDERS, APP_BASE_HREF,
-  LocationStrategy, HashLocationStrategy} from 'angular2/router';
+import {ROUTER_PROVIDERS} from 'angular2/router';
+import {APP_BASE_HREF} from 'angular2/platform/common';
 import {XHR} from 'angular2/compiler';
-import {DirectiveResolver} from 'angular2/src/core/linker/directive_resolver';
+import {DirectiveResolver} from 'angular2/src/compiler/directive_resolver';
 import {DOM} from 'angular2/src/platform/dom/dom_adapter';
 
 import {METEOR_PROVIDERS} from 'angular2-meteor';
@@ -95,7 +95,7 @@ export class ServerRenderer {
         NODE_LOCATION_PROVIDERS,
         METEOR_PROVIDERS,
         provide(ORIGIN_URL, { useValue: global.process.env.ROOT_URL }),
-        Router.baseHrefProvider,
+        provide(APP_BASE_HREF, { useValue: Router.baseUrl }),
         provide(REQUEST_URL, { useValue: Router.reqUrl }),
       ],
       template: serverDoc,

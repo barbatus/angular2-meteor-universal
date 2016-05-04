@@ -1,6 +1,7 @@
 'use strict';
 
 import {Type} from 'angular2/core';
+import {Meteor} from 'meteor/meteor';
 
 export class AngularUni {
   static render(component: Type, providers?) {

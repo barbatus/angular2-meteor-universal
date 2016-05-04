@@ -1,4 +1,5 @@
 'use strict';
+var meteor_1 = require('meteor/meteor');
 var AngularUni = (function () {
     function AngularUni() {
     }
@@ -7,7 +8,7 @@ var AngularUni = (function () {
         renderer.render(component, providers);
     };
     AngularUni.getRenderer = function () {
-        if (Meteor.isServer) {
+        if (meteor_1.Meteor.isServer) {
             return require('./server_renderer').ServerRenderer;
         }
         return require('./client_renderer').ClientRenderer;

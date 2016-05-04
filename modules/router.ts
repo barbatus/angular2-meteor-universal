@@ -1,18 +1,11 @@
 'use strict'
 
-import {provide} from 'angular2/core';
-import {APP_BASE_HREF} from 'angular2/router';
-
 export class Router {
   static render(html: string) {
     if (this.flowRouter) {
       var ssrContext = this.flowRouter.ssrContext.get();
       ssrContext.setHtml(html);
     }
-  }
-
-  static get baseHrefProvider() {
-    return provide(APP_BASE_HREF, { useValue: this.baseUrl })
   }
 
   private static get flowRouter() {

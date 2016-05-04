@@ -10,12 +10,13 @@ MeteorPromise.prototype.then = nativeThen;
 // Meteor promise to be within Meteor environment.
 // TODO: take a look how to support Zone-aware promise
 // that works with fibers.
-//global.Promise = Promise;
+global.Promise = Promise;
 var angular2_universal_1 = require('angular2-universal');
 var core_1 = require('angular2/core');
 var router_1 = require('angular2/router');
+var common_1 = require('angular2/platform/common');
 var compiler_1 = require('angular2/compiler');
-var directive_resolver_1 = require('angular2/src/core/linker/directive_resolver');
+var directive_resolver_1 = require('angular2/src/compiler/directive_resolver');
 var dom_adapter_1 = require('angular2/src/platform/dom/dom_adapter');
 var angular2_meteor_1 = require('angular2-meteor');
 var meteor_xhr_impl_1 = require('./meteor_xhr_impl');
@@ -69,7 +70,7 @@ var ServerRenderer = (function () {
                 angular2_universal_1.NODE_LOCATION_PROVIDERS,
                 angular2_meteor_1.METEOR_PROVIDERS,
                 core_1.provide(angular2_universal_1.ORIGIN_URL, { useValue: global.process.env.ROOT_URL }),
-                router_2.Router.baseHrefProvider,
+                core_1.provide(common_1.APP_BASE_HREF, { useValue: router_2.Router.baseUrl }),
                 core_1.provide(angular2_universal_1.REQUEST_URL, { useValue: router_2.Router.reqUrl }),
             ],
             template: serverDoc,
