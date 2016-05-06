@@ -20,7 +20,9 @@ var Router = (function () {
         get: function () {
             if (this.flowRouter) {
                 var current = this.flowRouter.current();
-                return current.path.replace(this.baseUrl, '') || '/';
+                if (this.baseUrl.length > 1) {
+                    return current.path.replace(this.baseUrl, '');
+                }
             }
             return this.baseUrl;
         },

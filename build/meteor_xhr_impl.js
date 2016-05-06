@@ -6,8 +6,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var fs = require('fs');
 var path = require('path');
-var compiler_1 = require('angular2/compiler');
-var promise_1 = require('angular2/src/facade/promise');
+var compiler_1 = require('@angular/compiler');
+var promise_1 = require('@angular/core/src/facade/promise');
 var serverJsonPath = path.resolve(global.process.argv[2]);
 var serverDir = path.dirname(serverJsonPath);
 var MeteorXHRImpl = (function (_super) {

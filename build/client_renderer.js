@@ -1,16 +1,15 @@
 'use strict';
-var core_1 = require('angular2/core');
+var core_1 = require('@angular/core');
 var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
-var common_1 = require('angular2/platform/common');
+var common_1 = require('@angular/common');
 var angular2_meteor_1 = require('angular2-meteor');
-var meteor_1 = require('meteor/meteor');
 var router_1 = require('./router');
 function bootstrap(appComponentType, providers) {
     if (providers === void 0) { providers = null; }
     providers = (providers || []).concat(core_1.provide(common_1.APP_BASE_HREF, { useValue: router_1.Router.baseUrl }));
     Preboot.start();
-    meteor_1.Meteor.defer(function () {
-        meteor_1.Meteor.startup(function () {
+    Meteor.defer(function () {
+        Meteor.startup(function () {
             angular2_meteor_auto_bootstrap_1.bootstrap(appComponentType, providers).then(function (comprRef) {
                 angular2_meteor_1.PromiseQ.onAll(function () {
                     Preboot.complete();

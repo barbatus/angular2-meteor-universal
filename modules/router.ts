@@ -16,7 +16,9 @@ export class Router {
   static get reqUrl() {
     if (this.flowRouter) {
       const current = this.flowRouter.current();
-      return current.path.replace(this.baseUrl, '') || '/';
+      if (this.baseUrl.length > 1) {
+        return current.path.replace(this.baseUrl, '');
+      }
     }
     return this.baseUrl;
   }

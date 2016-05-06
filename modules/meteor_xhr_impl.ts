@@ -3,16 +3,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {NgZone} from 'angular2/core';
-import {XHR} from 'angular2/compiler';
-import {PromiseWrapper, PromiseCompleter} from 'angular2/src/facade/promise';
+import {NgZone} from '@angular/core';
+import {XHR} from '@angular/compiler';
+import {PromiseWrapper, PromiseCompleter} from '@angular/core/src/facade/promise';
 
 const serverJsonPath = path.resolve(global.process.argv[2]);
 const serverDir = path.dirname(serverJsonPath);
 
 export class MeteorXHRImpl extends XHR {
-  private _serverDir: string;
-
   constructor(public ngZone: NgZone) {
     super();
   }

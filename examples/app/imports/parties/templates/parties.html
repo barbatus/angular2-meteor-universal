@@ -8,8 +8,8 @@
 </header>
 <main>
   <ul>
-    <li *ngFor="#party of parties">
-      <a [routerLink]="['/PartyDetails', {partyId: party._id}]">{{party.name}}</a>
+    <li *ngFor="let party of parties">
+      <a>{{party.name}}</a>
       <p>Where: {{party.location}}</p>
       <p>About: {{party.description}}</p>
     </li>

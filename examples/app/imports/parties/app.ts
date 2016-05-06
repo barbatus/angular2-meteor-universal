@@ -1,8 +1,8 @@
 'use strict';
 
-import {Component, provide, enableProdMode} from 'angular2/core';
+import {Component, provide, enableProdMode} from '@angular/core';
 
-import {ROUTER_DIRECTIVES, RouteConfig} from 'angular2/router';
+import {ROUTER_DIRECTIVES, RouteConfig} from '@angular/router-deprecated';
 
 // import {ROUTER_PROVIDERS, HashLocationStrategy, LocationStrategy} from 'angular2/router';
 

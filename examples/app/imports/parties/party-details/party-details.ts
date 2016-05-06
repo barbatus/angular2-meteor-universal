@@ -1,8 +1,8 @@
 'use strict';
 
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 
-import {RouteParams} from 'angular2/router';
+import {RouteParams} from '@angular/router-deprecated';
 
 import {MeteorComponent} from 'angular2-meteor';
 

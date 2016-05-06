@@ -1,8 +1,8 @@
 'use strict';
 
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 
-import {Control, FormBuilder, ControlGroup, Validators} from 'angular2/common';
+import {Control, FormBuilder, ControlGroup, Validators} from '@angular/common';
 
 import {MeteorComponent} from 'angular2-meteor';
 

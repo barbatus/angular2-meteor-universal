@@ -1,8 +1,8 @@
 'use strict';
 
-import {Component} from 'angular2/core';
+import {Component, NgZone} from '@angular/core';
 
-import {ROUTER_DIRECTIVES} from 'angular2/router';
+import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
 import '../party-form/party-form.ts';
 
@@ -21,7 +21,7 @@ export class PartiesCmp extends MeteorComponent {
   parties: Mongo.Cursor<Party>;
   location: ReactiveVar<String>;
 
-  constructor() {
+  constructor(ngZone: NgZone) {
     super();
     this.subscribe('parties', 'Palo Alto');
     this.location = new ReactiveVar('Palo Alto');

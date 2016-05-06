@@ -1,8 +1,7 @@
-import { NgZone } from 'angular2/core';
-import { XHR } from 'angular2/compiler';
+import { NgZone } from '@angular/core';
+import { XHR } from '@angular/compiler';
 export declare class MeteorXHRImpl extends XHR {
     ngZone: NgZone;
-    private _serverDir;
     constructor(ngZone: NgZone);
     get(templateUrl: string): Promise<string>;
     assetsPath: string;

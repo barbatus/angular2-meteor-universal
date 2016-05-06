@@ -1,4 +1,4 @@
-import {Component, provide, enableProdMode} from 'angular2/core';
+import {Component, provide, enableProdMode} from '@angular/core';
 
 import {Tasks} from '../../tasks';
 
@@ -23,8 +23,23 @@ export class Todos {
   }
 
   get todoCount() {
-    return Tasks.find({
-      checked: false
-    }).count();
+    let count = () => {
+      let result = Tasks.find({
+        checked: false
+      }).count();
+      if (Meteor.isServer) {
+        const Fiber = require('fibers');
+        Fiber.yield(result);
+      }
+      return result;
+    }
+
+    if (Meteor.isServer) {
+      const Fiber = require('fibers');
+      let fiber = Fiber(count);
+      return fiber.run.bind(fiber)();
+    }
+
+    return count();
   };
 }
