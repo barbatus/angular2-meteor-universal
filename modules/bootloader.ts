@@ -54,19 +54,11 @@ export class Bootloader {
   serialize(component: Type): string {
     let future = new Future;
 
-    function handleError(format, err) {
-      console.log(format, err);
-      future.throw(err);
-    }
-
     this.bootstrap(component).then(config => {
       return waitRender(config.compRef).then(rendered => {
         config.rendered = rendered;
         return config;
       });
-    })
-    .catch(err => {
-      handleError('Async Error: ', err);
     })
     .then(config => {
       let prebootCode = createPrebootCode(component, {
@@ -85,18 +77,17 @@ export class Bootloader {
           return config;
         });
     })
-    .catch(err => {
-      handleError('Preboot Error: ', err);
-    })
     .then(config => {
       let document = config.appRef.injector.get(DOCUMENT);
       let html = serializeDocument(document);
+      config.appRef.dispose();
       return html;
     })
+    .then(html => future.return(html))
     .catch(err => {
-      handleError('Rendering Error: ', err);
-    })
-    .then(html => future.return(html));
+      console.log(err);
+      future.throw(err);
+    });
 
     return future.wait();
   }
@@ -129,7 +120,7 @@ export class Bootloader {
     return this.platRef;
   }
 
-  private application(component: Type, providers?: any): ApplicationRef {
+  private application(component: Type, providers?: any): any {
     let doc = this.createDoc(component);
     let customProviders = buildNodeAppProviders(doc, providers);
     var appinjector = ReflectiveInjector.resolveAndCreate(
@@ -142,7 +133,6 @@ export class Bootloader {
   private bootstrap(component: Type) {
     let appInjector = this.application(component, this.appProviders);
     let appRef = appInjector.get(ApplicationRef);
-    appRef.dispose();
     let compRef = MeteorApp.launch(appRef, () =>
       coreLoadAndBootstrap(appInjector, component));
     return compRef.then(compRef => ({ appRef, compRef }));

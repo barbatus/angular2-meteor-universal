@@ -14,7 +14,7 @@ import {Parties} from '../../../parties';
 
 @Component({
   selector: 'parties',
-  templateUrl: 'imports/parties/templates/parties.html',
+  templateUrl: 'imports/parties/parties/parties.html',
   directives: [ROUTER_DIRECTIVES, PartyForm]
 })
 export class PartiesCmp extends MeteorComponent {

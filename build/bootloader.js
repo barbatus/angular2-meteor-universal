@@ -19,18 +19,11 @@ var Bootloader = (function () {
     }
     Bootloader.prototype.serialize = function (component) {
         var future = new Future;
-        function handleError(format, err) {
-            console.log(format, err);
-            future.throw(err);
-        }
         this.bootstrap(component).then(function (config) {
             return utils_1.waitRender(config.compRef).then(function (rendered) {
                 config.rendered = rendered;
                 return config;
             });
-        })
-            .catch(function (err) {
-            handleError('Async Error: ', err);
         })
             .then(function (config) {
             var prebootCode = angular2_universal_1.createPrebootCode(component, {
@@ -48,18 +41,17 @@ var Bootloader = (function () {
                 return config;
             });
         })
-            .catch(function (err) {
-            handleError('Preboot Error: ', err);
-        })
             .then(function (config) {
             var document = config.appRef.injector.get(platform_browser_1.DOCUMENT);
             var html = angular2_universal_1.serializeDocument(document);
+            config.appRef.dispose();
             return html;
         })
+            .then(function (html) { return future.return(html); })
             .catch(function (err) {
-            handleError('Rendering Error: ', err);
-        })
-            .then(function (html) { return future.return(html); });
+            console.log(err);
+            future.throw(err);
+        });
         return future.wait();
     };
     Object.defineProperty(Bootloader.prototype, "appProviders", {
@@ -99,7 +91,6 @@ var Bootloader = (function () {
     Bootloader.prototype.bootstrap = function (component) {
         var appInjector = this.application(component, this.appProviders);
         var appRef = appInjector.get(core_1.ApplicationRef);
-        appRef.dispose();
         var compRef = angular2_meteor_1.MeteorApp.launch(appRef, function () {
             return core_1.coreLoadAndBootstrap(appInjector, component);
         });
