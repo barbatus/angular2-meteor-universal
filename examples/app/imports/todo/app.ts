@@ -23,23 +23,8 @@ export class Todos {
   }
 
   get todoCount() {
-    let count = () => {
-      let result = Tasks.find({
-        checked: false
-      }).count();
-      if (Meteor.isServer) {
-        const Fiber = require('fibers');
-        Fiber.yield(result);
-      }
-      return result;
-    }
-
-    if (Meteor.isServer) {
-      const Fiber = require('fibers');
-      let fiber = Fiber(count);
-      return fiber.run.bind(fiber)();
-    }
-
-    return count();
+    return Tasks.find({
+      checked: false
+    }).count();
   };
 }

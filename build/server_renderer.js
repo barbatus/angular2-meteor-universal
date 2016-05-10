@@ -6,11 +6,8 @@ var ServerRenderer = (function () {
     }
     ServerRenderer.render = function (component, providers, customOptions) {
         var booloader = new bootloader_1.Bootloader;
-        booloader.serialize(component)
-            .then(function (html) {
-            router_1.Router.render(html);
-            console.log('rendered');
-        }).await();
+        var html = booloader.serialize(component);
+        router_1.Router.render(html);
     };
     return ServerRenderer;
 }());

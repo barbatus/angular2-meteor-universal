@@ -1,12 +1,11 @@
 import { Type } from '@angular/core';
+import './runtime';
 export declare class Bootloader {
     private static platRef;
-    serialize(component: Type): Promise<string>;
+    serialize(component: Type): string;
     appProviders: any[];
     private static platform;
     private application(component, providers?);
     private bootstrap(component);
-    private waitRouter(compRef);
     private createDoc(component);
-    private handleError(format, err);
 }

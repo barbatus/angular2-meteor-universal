@@ -6,6 +6,7 @@ import {APP_BASE_HREF} from '@angular/common';
 import {PromiseQ} from 'angular2-meteor';
 
 import {Router} from './router';
+import {waitRender, waitRouter} from './utils';
 
 export function bootstrap(appComponentType: any,
                           providers: Array<Type | Provider | any[]> = null) {
@@ -15,11 +16,18 @@ export function bootstrap(appComponentType: any,
   Preboot.start();
   Meteor.defer(() => {
     Meteor.startup(() => {
-      origBoot(appComponentType, providers).then(comprRef => {
-        PromiseQ.onAll(() => {
-          Preboot.complete();
+      origBoot(appComponentType, providers)
+        .then(compRef => {
+          return waitRender(compRef).then(() => compRef);
+        })
+        .then(compRef => {
+          PromiseQ.onAll(() => {
+            console.log('Data is ready');
+            waitRender(compRef).then(() => {
+              Preboot.complete();
+            });
+          });
         });
-      });
     });
   });
 }

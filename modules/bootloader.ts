@@ -12,7 +12,6 @@ import {
   coreLoadAndBootstrap,
   provide
 } from '@angular/core';
-import {Router as NgRouter} from '@angular/router-deprecated';
 import {Http} from '@angular/http';
 import {XHR} from '@angular/compiler';
 import {DirectiveResolver} from '@angular/compiler/src/directive_resolver';
@@ -21,6 +20,8 @@ import {Parse5DomAdapter} from '@angular/platform-server';
 Parse5DomAdapter.makeCurrent(); // ensure Parse5DomAdapter is used
 import {getDOM} from '@angular/platform-browser/src/dom/dom_adapter';
 const DOM: any = getDOM();
+
+import * as Future from 'fibers/future';
 
 import {
   NODE_ROUTER_PROVIDERS,
@@ -42,21 +43,30 @@ import {
 
 import {METEOR_PROVIDERS, MeteorApp} from 'angular2-meteor';
 
-import {Promise, waitRender} from './runtime';
+import './runtime';
+import {waitRender, waitRouter} from './utils';
 import {Router} from './router';
 import {MeteorXHRImpl} from './meteor_xhr_impl';
 
 export class Bootloader {
   private static platRef: PlatformRef;
 
-  serialize(component: Type): Promise<string> {
-    let maxZoneTurns = 2000;
+  serialize(component: Type): string {
+    let future = new Future;
 
-    return this.bootstrap(component).then(config => {
-      return waitRender(config.appRef, maxZoneTurns).then(() => config);
+    function handleError(format, err) {
+      console.log(format, err);
+      future.throw(err);
+    }
+
+    this.bootstrap(component).then(config => {
+      return waitRender(config.compRef).then(rendered => {
+        config.rendered = rendered;
+        return config;
+      });
     })
     .catch(err => {
-      this.handleError('Async Error: ', err);
+      handleError('Async Error: ', err);
     })
     .then(config => {
       let prebootCode = createPrebootCode(component, {
@@ -76,18 +86,19 @@ export class Bootloader {
         });
     })
     .catch(err => {
-      this.handleError('Preboot Error: ', err);
+      handleError('Preboot Error: ', err);
     })
     .then(config => {
       let document = config.appRef.injector.get(DOCUMENT);
-      let rendered = serializeDocument(document);
-      config.compRef.destroy();
-      config.appRef.dispose();
-      return rendered;
+      let html = serializeDocument(document);
+      return html;
     })
     .catch(err => {
-      this.handleError('Rendering Error: ', err);
-    });
+      handleError('Rendering Error: ', err);
+    })
+    .then(html => future.return(html));
+
+    return future.wait();
   }
 
   get appProviders() {
@@ -118,7 +129,7 @@ export class Bootloader {
     return this.platRef;
   }
 
-  private application(component: Type, providers?: any): any {
+  private application(component: Type, providers?: any): ApplicationRef {
     let doc = this.createDoc(component);
     let customProviders = buildNodeAppProviders(doc, providers);
     var appinjector = ReflectiveInjector.resolveAndCreate(
@@ -131,20 +142,10 @@ export class Bootloader {
   private bootstrap(component: Type) {
     let appInjector = this.application(component, this.appProviders);
     let appRef = appInjector.get(ApplicationRef);
+    appRef.dispose();
     let compRef = MeteorApp.launch(appRef, () =>
-      coreLoadAndBootstrap(appInjector, component)).then(this.waitRouter);
+      coreLoadAndBootstrap(appInjector, component));
     return compRef.then(compRef => ({ appRef, compRef }));
-  }
-
-  private waitRouter(compRef: ComponentRef<any>): Promise<ComponentRef<any>> {
-    let injector = compRef.injector;
-    let router = injector.get(NgRouter, NgRouter);
-
-    if (router && router._currentNavigation) {
-      return router._currentNavigation.then(() => Promise.resolve(compRef));
-    }
-
-    return Promise.resolve(true);
   }
 
   private createDoc(component: Type) {
@@ -153,10 +154,5 @@ export class Bootloader {
     let el = DOM.createElement(selector);
     DOM.appendChild(serverDoc.body, el);
     return serverDoc;
-  }
-
-  private handleError(format, err) {
-    console.log(format, err);
-    throw err;
   }
 }

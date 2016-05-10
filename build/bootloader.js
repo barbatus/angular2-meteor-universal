@@ -1,6 +1,5 @@
 'use strict';
 var core_1 = require('@angular/core');
-var router_deprecated_1 = require('@angular/router-deprecated');
 var compiler_1 = require('@angular/compiler');
 var directive_resolver_1 = require('@angular/compiler/src/directive_resolver');
 var platform_browser_1 = require('@angular/platform-browser');
@@ -8,22 +7,30 @@ var platform_server_1 = require('@angular/platform-server');
 platform_server_1.Parse5DomAdapter.makeCurrent(); // ensure Parse5DomAdapter is used
 var dom_adapter_1 = require('@angular/platform-browser/src/dom/dom_adapter');
 var DOM = dom_adapter_1.getDOM();
+var Future = require('fibers/future');
 var angular2_universal_1 = require('angular2-universal');
 var angular2_meteor_1 = require('angular2-meteor');
-var runtime_1 = require('./runtime');
+require('./runtime');
+var utils_1 = require('./utils');
 var router_1 = require('./router');
 var meteor_xhr_impl_1 = require('./meteor_xhr_impl');
 var Bootloader = (function () {
     function Bootloader() {
     }
     Bootloader.prototype.serialize = function (component) {
-        var _this = this;
-        var maxZoneTurns = 2000;
-        return this.bootstrap(component).then(function (config) {
-            return runtime_1.waitRender(config.appRef, maxZoneTurns).then(function () { return config; });
+        var future = new Future;
+        function handleError(format, err) {
+            console.log(format, err);
+            future.throw(err);
+        }
+        this.bootstrap(component).then(function (config) {
+            return utils_1.waitRender(config.compRef).then(function (rendered) {
+                config.rendered = rendered;
+                return config;
+            });
         })
             .catch(function (err) {
-            _this.handleError('Async Error: ', err);
+            handleError('Async Error: ', err);
         })
             .then(function (config) {
             var prebootCode = angular2_universal_1.createPrebootCode(component, {
@@ -42,18 +49,18 @@ var Bootloader = (function () {
             });
         })
             .catch(function (err) {
-            _this.handleError('Preboot Error: ', err);
+            handleError('Preboot Error: ', err);
         })
             .then(function (config) {
             var document = config.appRef.injector.get(platform_browser_1.DOCUMENT);
-            var rendered = angular2_universal_1.serializeDocument(document);
-            config.compRef.destroy();
-            config.appRef.dispose();
-            return rendered;
+            var html = angular2_universal_1.serializeDocument(document);
+            return html;
         })
             .catch(function (err) {
-            _this.handleError('Rendering Error: ', err);
-        });
+            handleError('Rendering Error: ', err);
+        })
+            .then(function (html) { return future.return(html); });
+        return future.wait();
     };
     Object.defineProperty(Bootloader.prototype, "appProviders", {
         get: function () {
@@ -92,18 +99,11 @@ var Bootloader = (function () {
     Bootloader.prototype.bootstrap = function (component) {
         var appInjector = this.application(component, this.appProviders);
         var appRef = appInjector.get(core_1.ApplicationRef);
+        appRef.dispose();
         var compRef = angular2_meteor_1.MeteorApp.launch(appRef, function () {
             return core_1.coreLoadAndBootstrap(appInjector, component);
-        }).then(this.waitRouter);
+        });
         return compRef.then(function (compRef) { return ({ appRef: appRef, compRef: compRef }); });
-    };
-    Bootloader.prototype.waitRouter = function (compRef) {
-        var injector = compRef.injector;
-        var router = injector.get(router_deprecated_1.Router, router_deprecated_1.Router);
-        if (router && router._currentNavigation) {
-            return router._currentNavigation.then(function () { return runtime_1.Promise.resolve(compRef); });
-        }
-        return runtime_1.Promise.resolve(true);
     };
     Bootloader.prototype.createDoc = function (component) {
         var selector = new directive_resolver_1.DirectiveResolver().resolve(component).selector;
@@ -111,10 +111,6 @@ var Bootloader = (function () {
         var el = DOM.createElement(selector);
         DOM.appendChild(serverDoc.body, el);
         return serverDoc;
-    };
-    Bootloader.prototype.handleError = function (format, err) {
-        console.log(format, err);
-        throw err;
     };
     return Bootloader;
 }());

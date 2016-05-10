@@ -7,10 +7,7 @@ import {Bootloader} from './bootloader';
 export class ServerRenderer {
   static render(component, providers?, customOptions?) {
     let booloader = new Bootloader;
-    booloader.serialize(component)
-      .then(html => {
-        Router.render(html);
-        console.log('rendered');
-      }).await();
+    let html = booloader.serialize(component);
+    Router.render(html);
   }
 }
