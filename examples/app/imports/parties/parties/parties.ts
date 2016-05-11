@@ -24,10 +24,7 @@ export class PartiesCmp extends MeteorComponent {
   constructor(ngZone: NgZone) {
     super();
 
-    console.log('Subscribe');
-    this.subscribe('parties', 'Palo Alto', () => {
-      console.log('Data is received');
-    });
+    this.subscribe('parties', 'Palo Alto');
     this.location = new ReactiveVar('Palo Alto');
 
     this.autorun(() => {

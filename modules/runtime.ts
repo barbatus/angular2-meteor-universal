@@ -1,6 +1,8 @@
 'use strict';
 
-import 'angular2-universal-polyfills/dist/zone-node';
+//import 'es6-shim';
+import 'zone.js/dist/zone-node';
+import 'zone.js/dist/long-stack-trace-zone';
 
 const runTask = Zone.prototype.runTask;
 Zone.prototype.runTask = function (task, applyThis, applyArgs) {

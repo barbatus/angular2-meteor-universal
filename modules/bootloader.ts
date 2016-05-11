@@ -12,6 +12,9 @@ import {
   coreLoadAndBootstrap,
   provide
 } from '@angular/core';
+
+NgZone.assertNotInAngularZone = function() {};
+
 import {Http} from '@angular/http';
 import {XHR} from '@angular/compiler';
 import {DirectiveResolver} from '@angular/compiler/src/directive_resolver';
@@ -55,8 +58,8 @@ export class Bootloader {
     let future = new Future;
 
     this.bootstrap(component).then(config => {
-      return waitRender(config.compRef).then(rendered => {
-        config.rendered = rendered;
+      return waitRender(config.compRef).then(stable => {
+        config.stable = stable;
         return config;
       });
     })
@@ -80,7 +83,9 @@ export class Bootloader {
     .then(config => {
       let document = config.appRef.injector.get(DOCUMENT);
       let html = serializeDocument(document);
-      config.appRef.dispose();
+      if (config.stable) {
+        config.appRef.dispose();
+      }
       return html;
     })
     .then(html => future.return(html))

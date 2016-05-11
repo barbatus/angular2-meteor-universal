@@ -5,6 +5,7 @@ var ServerRenderer = (function () {
     function ServerRenderer() {
     }
     ServerRenderer.render = function (component, providers, customOptions) {
+        console.log('Server rendering');
         var booloader = new bootloader_1.Bootloader;
         var html = booloader.serialize(component);
         router_1.Router.render(html);

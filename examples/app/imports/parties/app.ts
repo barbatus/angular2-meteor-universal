@@ -14,8 +14,6 @@ import './party-details/party-details.ts';
 
 import {PartyDetailsCmp} from './party-details/party-details';
 
-enableProdMode();
-
 @Component({
   selector: 'socially',
   template: '<router-outlet></router-outlet>',

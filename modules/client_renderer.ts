@@ -1,9 +1,11 @@
 'use strict';
 
 import {Type, Provider, provide} from '@angular/core';
-import {bootstrap as origBoot} from 'angular2-meteor-auto-bootstrap';
+import {scheduleMicroTask, assertionsEnabled} from '@angular/core/src/facade/lang';
 import {APP_BASE_HREF} from '@angular/common';
+import {bootstrap as origBoot} from 'angular2-meteor-auto-bootstrap';
 import {PromiseQ} from 'angular2-meteor';
+import {REQUEST_URL, BASE_URL} from 'angular2-universal';
 
 import {Router} from './router';
 import {waitRender, waitRouter} from './utils';
@@ -11,7 +13,8 @@ import {waitRender, waitRouter} from './utils';
 export function bootstrap(appComponentType: any,
                           providers: Array<Type | Provider | any[]> = null) {
   providers = (providers || []).concat(
-    provide(APP_BASE_HREF, { useValue: Router.baseUrl }));
+    provide(APP_BASE_HREF, { useValue: Router.baseUrl }),
+    provide(BASE_URL, { useValue: Router.baseUrl }));
 
   Preboot.start();
   Meteor.defer(() => {
@@ -22,8 +25,7 @@ export function bootstrap(appComponentType: any,
         })
         .then(compRef => {
           PromiseQ.onAll(() => {
-            console.log('Data is ready');
-            waitRender(compRef).then(() => {
+            scheduleMicroTask(() => {
               Preboot.complete();
             });
           });

@@ -13,7 +13,7 @@ export class Router {
     return flowSSR && flowSSR.FlowRouter;
   }
 
-  static get reqUrl() {
+  static get reqUrl(): string {
     if (this.flowRouter) {
       const current = this.flowRouter.current();
       if (this.baseUrl.length > 1) {
@@ -23,7 +23,7 @@ export class Router {
     return this.baseUrl;
   }
 
-  static get baseUrl() {
+  static get baseUrl(): string {
     if (this.flowRouter) {
       const current = this.flowRouter.current();
       return current.route.pathDef;

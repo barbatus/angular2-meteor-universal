@@ -1,13 +1,15 @@
 'use strict';
 var core_1 = require('@angular/core');
-var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
+var lang_1 = require('@angular/core/src/facade/lang');
 var common_1 = require('@angular/common');
+var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
 var angular2_meteor_1 = require('angular2-meteor');
+var angular2_universal_1 = require('angular2-universal');
 var router_1 = require('./router');
 var utils_1 = require('./utils');
 function bootstrap(appComponentType, providers) {
     if (providers === void 0) { providers = null; }
-    providers = (providers || []).concat(core_1.provide(common_1.APP_BASE_HREF, { useValue: router_1.Router.baseUrl }));
+    providers = (providers || []).concat(core_1.provide(common_1.APP_BASE_HREF, { useValue: router_1.Router.baseUrl }), core_1.provide(angular2_universal_1.BASE_URL, { useValue: router_1.Router.baseUrl }));
     Preboot.start();
     Meteor.defer(function () {
         Meteor.startup(function () {
@@ -17,8 +19,7 @@ function bootstrap(appComponentType, providers) {
             })
                 .then(function (compRef) {
                 angular2_meteor_1.PromiseQ.onAll(function () {
-                    console.log('Data is ready');
-                    utils_1.waitRender(compRef).then(function () {
+                    lang_1.scheduleMicroTask(function () {
                         Preboot.complete();
                     });
                 });

@@ -1,9 +1,14 @@
 'use strict';
 
-import {ComponentRef, NgZone} from '@angular/core';
+import {ComponentRef, NgZone, Testability} from '@angular/core';
 import {Router as NgRouter} from '@angular/router-deprecated';
 import {Http} from '@angular/http';
 import {ObservableWrapper} from '@angular/core/src/facade/async';
+import {scheduleMicroTask, assertionsEnabled} from '@angular/core/src/facade/lang';
+
+import {REQUEST_URL, BASE_URL} from 'angular2-universal';
+
+import {Router} from './router';
 
 export function waitRouter(compRef: ComponentRef<any>): Promise<ComponentRef<any>> {
   let injector = compRef.injector;
@@ -25,33 +30,56 @@ function clearResolveTimeout(handler) {
   clearTimeout(handler);
 };
 
+class TimeAssert {
+  start: number = Date.now();
+  reqUrl: string;
 
-export function waitRender(compRef: ComponentRef,
-                           waitMs: number = 500): Promise<any> {
+  constructor(reqUrl) {
+    this.reqUrl = reqUrl;
+  }
+
+  assertStable() {
+    if (assertionsEnabled()) {
+      let time = Date.now() - this.start;
+      console.log(`${this.reqUrl} is stable after ${time}ms`);
+    }
+  }
+
+  assertNotStable() {
+    if (assertionsEnabled()) {
+      let time = Date.now() - this.start;
+      console.log(`${this.reqUrl} is not stable after ${time}ms`);
+    }
+  }
+}
+
+export function waitRender(compRef: ComponentRef<any>,
+                           waitMs: number = 1000): Promise<any> {
   let ngZone = compRef.injector.get(NgZone);
   let http = compRef.injector.get(Http, Http);
+  // TODO: implement own class similar to testability.
+  let testability = compRef.injector.get(Testability, null);
+  let baseUrl = compRef.injector.get(BASE_URL);
 
+  // Router.reqUrl doesn't work on the server.
+  // Check why context is not accessible.
+  let time = new TimeAssert(baseUrl);
   return new Promise(resolve => {
     ngZone.runOutsideAngular(() => {
       waitRouter(compRef).then(() => {
-        if (!ngZone.hasPendingMicrotasks && !ngZone.hasPendingMacrotasks) {
-          resolve(true);
-          return;
-        }
-
         let waitHandler;
-        let sub = ObservableWrapper.subscribe(ngZone.onStable, () => {
+
+        testability.whenStable(() => {
+          time.assertStable();
+          testability._callbacks.length = 0;
           clearResolveTimeout(waitHandler);
-          waitHandler = null;
-          console.log('onStable');
-          ObservableWrapper.dispose(sub);
           resolve(true);
         });
 
-        if (waitMs !== Number.MAX_VALUE) {
+        if (assertionsEnabled()) {
           waitHandler = setTimeout(function() {
-            console.log('App takes more then 500ms to render');
-            ObservableWrapper.dispose(sub);
+            time.assertNotStable();
+            testability._callbacks.length = 0;
             resolve(false);
           }, waitMs);
         }

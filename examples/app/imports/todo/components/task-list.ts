@@ -27,7 +27,7 @@ export class TaskList extends MeteorComponent implements OnChanges {
   }
 
   ngOnChanges(changes) {
-    if (changes.hideCompleted) {
+    if ('hideCompleted' in changes) {
       this.tasks = this._getTasks(this.hideCompleted);
     }
   }

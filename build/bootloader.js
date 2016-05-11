@@ -1,5 +1,6 @@
 'use strict';
 var core_1 = require('@angular/core');
+core_1.NgZone.assertNotInAngularZone = function () { };
 var compiler_1 = require('@angular/compiler');
 var directive_resolver_1 = require('@angular/compiler/src/directive_resolver');
 var platform_browser_1 = require('@angular/platform-browser');
@@ -20,8 +21,8 @@ var Bootloader = (function () {
     Bootloader.prototype.serialize = function (component) {
         var future = new Future;
         this.bootstrap(component).then(function (config) {
-            return utils_1.waitRender(config.compRef).then(function (rendered) {
-                config.rendered = rendered;
+            return utils_1.waitRender(config.compRef).then(function (stable) {
+                config.stable = stable;
                 return config;
             });
         })
@@ -44,7 +45,9 @@ var Bootloader = (function () {
             .then(function (config) {
             var document = config.appRef.injector.get(platform_browser_1.DOCUMENT);
             var html = angular2_universal_1.serializeDocument(document);
-            config.appRef.dispose();
+            if (config.stable) {
+                config.appRef.dispose();
+            }
             return html;
         })
             .then(function (html) { return future.return(html); })

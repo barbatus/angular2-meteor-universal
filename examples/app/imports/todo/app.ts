@@ -6,8 +6,6 @@ import './components/task-list.ts';
 
 import {TaskList} from './components/task-list';
 
-enableProdMode();
-
 @Component({
   selector: 'todo',
   templateUrl: 'imports/todo/app.html',
