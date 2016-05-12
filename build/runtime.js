@@ -1,12 +1,16 @@
 'use strict';
-//import 'es6-shim';
+var Fiber = require('fibers');
+var MeteorPromise = require('meteor-promise');
+MeteorPromise.Fiber = Fiber;
 require('zone.js/dist/zone-node');
 require('zone.js/dist/long-stack-trace-zone');
 var runTask = Zone.prototype.runTask;
 Zone.prototype.runTask = function (task, applyThis, applyArgs) {
-    var _this = this;
-    var Fiber = require('fibers');
-    return Fiber(function () {
-        return runTask.apply(_this, [task, applyThis, applyArgs]);
-    }).run();
+    if (!Fiber.current) {
+        var result = void 0;
+        MeteorPromise.asyncApply.apply(MeteorPromise, [runTask, this, [task, applyThis, applyArgs], true])
+            .then(function (result) { return result; });
+        return result;
+    }
+    return runTask.apply(this, [task, applyThis, applyArgs]);
 };

@@ -4,6 +4,7 @@ var router_deprecated_1 = require('@angular/router-deprecated');
 var http_1 = require('@angular/http');
 var lang_1 = require('@angular/core/src/facade/lang');
 var angular2_universal_1 = require('angular2-universal');
+var logger_1 = require('./logger');
 function waitRouter(compRef) {
     var injector = compRef.injector;
     var router = injector.get(router_deprecated_1.Router, router_deprecated_1.Router);
@@ -22,25 +23,6 @@ function clearResolveTimeout(handler) {
     clearTimeout(handler);
 }
 ;
-var TimeAssert = (function () {
-    function TimeAssert(reqUrl) {
-        this.start = Date.now();
-        this.reqUrl = reqUrl;
-    }
-    TimeAssert.prototype.assertStable = function () {
-        if (lang_1.assertionsEnabled()) {
-            var time = Date.now() - this.start;
-            console.log(this.reqUrl + " is stable after " + time + "ms");
-        }
-    };
-    TimeAssert.prototype.assertNotStable = function () {
-        if (lang_1.assertionsEnabled()) {
-            var time = Date.now() - this.start;
-            console.log(this.reqUrl + " is not stable after " + time + "ms");
-        }
-    };
-    return TimeAssert;
-}());
 function waitRender(compRef, waitMs) {
     if (waitMs === void 0) { waitMs = 1000; }
     var ngZone = compRef.injector.get(core_1.NgZone);
@@ -50,7 +32,7 @@ function waitRender(compRef, waitMs) {
     var baseUrl = compRef.injector.get(angular2_universal_1.BASE_URL);
     // Router.reqUrl doesn't work on the server.
     // Check why context is not accessible.
-    var time = new TimeAssert(baseUrl);
+    var time = new logger_1.TimeAssert(baseUrl);
     return new Promise(function (resolve) {
         ngZone.runOutsideAngular(function () {
             waitRouter(compRef).then(function () {

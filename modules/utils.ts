@@ -9,6 +9,7 @@ import {scheduleMicroTask, assertionsEnabled} from '@angular/core/src/facade/lan
 import {REQUEST_URL, BASE_URL} from 'angular2-universal';
 
 import {Router} from './router';
+import {TimeAssert} from './logger';
 
 export function waitRouter(compRef: ComponentRef<any>): Promise<ComponentRef<any>> {
   let injector = compRef.injector;
@@ -29,29 +30,6 @@ function clearResolveTimeout(handler) {
   }
   clearTimeout(handler);
 };
-
-class TimeAssert {
-  start: number = Date.now();
-  reqUrl: string;
-
-  constructor(reqUrl) {
-    this.reqUrl = reqUrl;
-  }
-
-  assertStable() {
-    if (assertionsEnabled()) {
-      let time = Date.now() - this.start;
-      console.log(`${this.reqUrl} is stable after ${time}ms`);
-    }
-  }
-
-  assertNotStable() {
-    if (assertionsEnabled()) {
-      let time = Date.now() - this.start;
-      console.log(`${this.reqUrl} is not stable after ${time}ms`);
-    }
-  }
-}
 
 export function waitRender(compRef: ComponentRef<any>,
                            waitMs: number = 1000): Promise<any> {

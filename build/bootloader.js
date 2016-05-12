@@ -8,6 +8,7 @@ var platform_server_1 = require('@angular/platform-server');
 platform_server_1.Parse5DomAdapter.makeCurrent(); // ensure Parse5DomAdapter is used
 var dom_adapter_1 = require('@angular/platform-browser/src/dom/dom_adapter');
 var DOM = dom_adapter_1.getDOM();
+var lang_1 = require('@angular/core/src/facade/lang');
 var Future = require('fibers/future');
 var angular2_universal_1 = require('angular2-universal');
 var angular2_meteor_1 = require('angular2-meteor');
@@ -76,11 +77,12 @@ var Bootloader = (function () {
     });
     Object.defineProperty(Bootloader, "platform", {
         get: function () {
-            if (!this.platRef) {
+            var platRef = core_1.getPlatform();
+            if (lang_1.isBlank(platRef)) {
                 var customProviders = core_1.ReflectiveInjector.resolveAndCreate(angular2_universal_1.buildNodeProviders());
-                this.platRef = core_1.createPlatform(customProviders);
+                platRef = core_1.createPlatform(customProviders);
             }
-            return this.platRef;
+            return platRef;
         },
         enumerable: true,
         configurable: true

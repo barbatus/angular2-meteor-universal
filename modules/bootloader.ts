@@ -10,6 +10,7 @@ import {
   Type,
   createPlatform,
   coreLoadAndBootstrap,
+  getPlatform,
   provide
 } from '@angular/core';
 
@@ -23,6 +24,7 @@ import {Parse5DomAdapter} from '@angular/platform-server';
 Parse5DomAdapter.makeCurrent(); // ensure Parse5DomAdapter is used
 import {getDOM} from '@angular/platform-browser/src/dom/dom_adapter';
 const DOM: any = getDOM();
+import {isPresent, isBlank} from '@angular/core/src/facade/lang';
 
 import * as Future from 'fibers/future';
 
@@ -117,12 +119,13 @@ export class Bootloader {
   }
 
   private static get platform(): PlatformRef {
-    if (!this.platRef) {
+    let platRef = getPlatform();
+    if (isBlank(platRef)) {
       let customProviders =
         ReflectiveInjector.resolveAndCreate(buildNodeProviders());
-      this.platRef = createPlatform(customProviders);
+      platRef = createPlatform(customProviders);
     }
-    return this.platRef;
+    return platRef;
   }
 
   private application(component: Type, providers?: any): any {
