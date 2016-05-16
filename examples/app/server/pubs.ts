@@ -1,5 +1,7 @@
 'use strict';
 
+import {Meteor} from 'meteor/meteor';
+
 import {Parties} from '../parties';
 
 Meteor.publish('parties', function(location: string) {

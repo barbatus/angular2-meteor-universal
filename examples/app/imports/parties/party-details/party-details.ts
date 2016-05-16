@@ -20,6 +20,6 @@ export class PartyDetailsCmp extends MeteorComponent {
     var partyId = routeParams.get('partyId');
     this.subscribe('party', partyId, () => {
       this.party = Parties.findOne(partyId);
-    }, true);
+    });
   }
 }

@@ -1,3 +1,8 @@
+'use strict';
+
+import {Meteor} from 'meteor/meteor';
+import {Mongo} from 'meteor/mongo';
+
 export let Tasks = new Mongo.Collection<Task>('tasks');
 
 Meteor.methods({

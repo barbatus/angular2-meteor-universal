@@ -7,15 +7,29 @@ MeteorPromise.Fiber = Fiber;
 import 'zone.js/dist/zone-node';
 import 'zone.js/dist/long-stack-trace-zone';
 
-const runTask = Zone.prototype.runTask;
-Zone.prototype.runTask = function (task, applyThis, applyArgs) {
+function runZoneInFiber(method, context, params) {
   if (!Fiber.current) {
     let result;
     // Using fibers from MeteorPromise fiber pool.
     MeteorPromise.asyncApply.apply(MeteorPromise,
-      [runTask, this, [task, applyThis, applyArgs], true])
-        .then(result => result);
+      [method, context, params, true])
+      .then(result => result);
     return result;
   }
-  return runTask.apply(this, [task, applyThis, applyArgs]);
+  return method.apply(context, params);
+}
+
+const runTask = Zone.prototype.runTask;
+Zone.prototype.runTask = function (task, applyThis, applyArgs) {
+  return runZoneInFiber(runTask, this, [task, applyThis, applyArgs]);
+};
+
+const run = Zone.prototype.run;
+Zone.prototype.run = function(callback, applyThis, applyArgs, source) {
+  return runZoneInFiber(run, this, [callback, applyThis, applyArgs, source]);
+};
+
+const runGuarded = Zone.prototype.runGuarded;
+Zone.prototype.runGuarded = function(callback, applyThis, applyArgs, source) {
+  return runZoneInFiber(runGuarded, this, [callback, applyThis, applyArgs, source]);
 };

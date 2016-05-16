@@ -1,5 +1,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 
+import {Mongo} from 'meteor/mongo';
+
 import './task.ts';
 
 import {TaskView} from './task';
@@ -23,7 +25,7 @@ export class TaskList extends MeteorComponent implements OnChanges {
     this.isLoading = true;
     this.subscribe('tasks.public', () => {
       this.isLoading = false;
-    }, true);
+    });
   }
 
   ngOnChanges(changes) {

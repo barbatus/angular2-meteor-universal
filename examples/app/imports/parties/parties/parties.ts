@@ -4,6 +4,9 @@ import {Component, NgZone} from '@angular/core';
 
 import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
+import {Mongo} from 'meteor/mongo';
+import {ReactiveVar} from 'meteor/reactive-var';
+
 import '../party-form/party-form.ts';
 
 import {PartyForm} from '../party-form/party-form';
@@ -30,7 +33,7 @@ export class PartiesCmp extends MeteorComponent {
     this.autorun(() => {
       var selector = { location: this.location.get() };
       this.parties = Parties.find(selector);
-    }, true);
+    });
   }
 
   searchLocation(location) {

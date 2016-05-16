@@ -1,10 +1,9 @@
 'use strict';
 var core_1 = require('@angular/core');
-var lang_1 = require('@angular/core/src/facade/lang');
 var common_1 = require('@angular/common');
+var angular2_universal_1 = require('angular2-universal');
 var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
 var angular2_meteor_1 = require('angular2-meteor');
-var angular2_universal_1 = require('angular2-universal');
 var router_1 = require('./router');
 var utils_1 = require('./utils');
 function bootstrap(appComponentType, providers) {
@@ -19,7 +18,7 @@ function bootstrap(appComponentType, providers) {
             })
                 .then(function (compRef) {
                 angular2_meteor_1.PromiseQ.onAll(function () {
-                    lang_1.scheduleMicroTask(function () {
+                    utils_1.waitRender(compRef).then(function () {
                         Preboot.complete();
                     });
                 });

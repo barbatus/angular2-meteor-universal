@@ -1,5 +1,6 @@
 'use strict';
 
+import {Accounts} from 'meteor/accounts-base';
 import {Parties} from '../parties';
 
 export function loadTestData() {

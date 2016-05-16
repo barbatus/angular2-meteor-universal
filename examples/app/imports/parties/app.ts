@@ -4,8 +4,6 @@ import {Component, provide, enableProdMode} from '@angular/core';
 
 import {ROUTER_DIRECTIVES, RouteConfig} from '@angular/router-deprecated';
 
-// import {ROUTER_PROVIDERS, HashLocationStrategy, LocationStrategy} from 'angular2/router';
-
 import './parties/parties.ts';
 
 import {PartiesCmp} from './parties/parties';

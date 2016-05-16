@@ -1,6 +1,8 @@
 'use strict';
 
-export var Parties = new Mongo.Collection<Party>('parties');
+import {Mongo} from 'meteor/mongo';
+
+export const Parties = new Mongo.Collection<Party>('parties');
 
 Parties.allow({
   insert: function(userId, party) {

@@ -1,9 +1,10 @@
 import {AngularUni} from 'angular2-meteor-universal';
-import {Todos} from './imports/todo/app';
-import {Socially} from './imports/parties/app';
 import {provide} from '@angular/core';
 import {ROUTER_PROVIDERS} from '@angular/router-deprecated';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+
+import {Todos} from './imports/todo/app';
+import {Socially} from './imports/parties/app';
 
 FlowRouter.route('/todo', {
   action: function(params) {
