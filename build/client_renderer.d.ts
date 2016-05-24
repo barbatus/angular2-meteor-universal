@@ -1,5 +1,9 @@
-import { Type, Provider } from '@angular/core';
-export declare function bootstrap(appComponentType: any, providers?: Array<Type | Provider | any[]>): void;
-export declare class ClientRenderer {
-    static render(component: any, providers?: any): void;
+import { Type } from '@angular/core';
+import { Providers } from 'angular2-meteor';
+import { ClientOptions } from './angular_uni';
+export default class ClientRenderer {
+    private options;
+    constructor(options?: ClientOptions);
+    render(component: any, providers?: any): void;
 }
+export declare function bootstrap(component: Type, providers: Providers, options?: ClientOptions): void;

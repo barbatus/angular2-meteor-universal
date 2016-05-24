@@ -11,8 +11,10 @@ import {
 
 import {REQUEST_URL, BASE_URL} from 'angular2-universal';
 
+import {MeteorApp} from 'angular2-meteor';
+
 import {Router} from './router';
-import {TimeAssert} from './logger';
+import {TimeAssert, Logger} from './logger';
 
 export function waitRouter(compRef: ComponentRef<any>): Promise<ComponentRef<any>> {
   let injector = compRef.injector;
@@ -35,48 +37,27 @@ function clearResolveTimeout(handler) {
 };
 
 export function waitRender(compRef: ComponentRef<any>,
-                           waitMs: number = 1000): Promise<any> {
+                           waitMs: number = 1000): Promise<boolean> {
   let ngZone = compRef.injector.get(NgZone);
-  let baseUrl = compRef.injector.get(BASE_URL);
+  let logger = compRef.injector.get(Logger);
+  let meteorApp = compRef.injector.get(MeteorApp);
 
-  // Router.reqUrl doesn't work on the server.
-  // Check why context is not accessible.
-  let time = new TimeAssert(baseUrl);
-  let zoneSub; let tHandler;
+  let time = logger.newTimeAssert();
   return new Promise(resolve => {
     ngZone.runOutsideAngular(() => {
       waitRouter(compRef).then(() => {
-        if (!ngZone.hasPendingMacrotasks &&
-            !ngZone.hasPendingMicrotasks) {
+        let waitHandler;
+        meteorApp.onStable(() => {
           time.assertStable();
-          ready(true);
-          return;
-        }
+          clearResolveTimeout(waitHandler);
+          waitHandler = null;
+          resolve(true);
+        });
 
-        function ready(stable) {
-          scheduleMicroTask(() => {
-            if (zoneSub) {
-              clearResolveTimeout(tHandler);
-              ObservableWrapper.dispose(zoneSub);
-            }
-            resolve(stable);
-          });
-        }
-
-        zoneSub = ObservableWrapper.subscribe(
-          ngZone.onStable, () => {
-            if (!ngZone.hasPendingMacrotasks) {
-              time.assertStable();
-              ready(true);
-            }
-          });
-
-        if (assertionsEnabled()) {
-          tHandler = TimerWrapper.setTimeout(() => {
-            time.assertNotStable();
-            ready(false);
-          }, waitMs);
-        }
+        waitHandler = setTimeout(function() {
+          time.assertNotStable();
+          resolve(false);
+        }, waitMs);
       });
     });
   });

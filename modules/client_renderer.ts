@@ -6,29 +6,43 @@ import {APP_BASE_HREF} from '@angular/common';
 import {REQUEST_URL, BASE_URL} from 'angular2-universal';
 
 import {bootstrap as origBoot} from 'angular2-meteor-auto-bootstrap';
-import {PromiseQ} from 'angular2-meteor';
+import {MeteorApp, Providers} from 'angular2-meteor';
 
+import {ClientOptions} from './angular_uni';
+import {clientDefault} from './angular_uni_client';
 import {Router} from './router';
 import {waitRender, waitRouter} from './utils';
 
-export function bootstrap(appComponentType: any,
-                          providers: Array<Type | Provider | any[]> = null) {
+export default class ClientRenderer {
+  constructor(private options: ClientOptions = {}) {
+    this.options = _.defaults(options, clientDefault);
+  }
+
+  render(component, providers?) {
+    bootstrap(component, providers, this.options);
+  }
+}
+
+export function bootstrap(component: Type,
+                          providers: Providers,
+                          options?: ClientOptions) {
   providers = (providers || []).concat(
     provide(APP_BASE_HREF, { useValue: Router.baseUrl }),
     provide(BASE_URL, { useValue: Router.baseUrl }));
 
   Preboot.start();
-  Meteor.defer(() => {
+  // Run in a new frame to make sure
+  // DOM is updated after the start.
+  scheduleMicroTask(() => {
     Meteor.startup(() => {
-      origBoot(appComponentType, providers)
+      origBoot(component, providers)
         .then(compRef => {
-          return waitRender(compRef).then(() => compRef);
+          return waitRouter(compRef).then(() => compRef);
         })
         .then(compRef => {
-          PromiseQ.onAll(() => {
-            waitRender(compRef).then(() => {
-              Preboot.complete();
-            });
+          let meteorApp = compRef.injector.get(MeteorApp);
+          meteorApp.onRendered(() => {
+            Preboot.complete();
           });
         });
     });
@@ -63,11 +77,5 @@ class Preboot {
     if (!this._prebootRef) {
       this._prebootRef = global['preboot'];
     }
-  }
-}
-
-export class ClientRenderer {
-  static render(component, providers?) {
-    bootstrap(component, providers);
   }
 }

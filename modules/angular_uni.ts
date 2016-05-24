@@ -2,16 +2,25 @@
 
 import {Type} from '@angular/core';
 
-export class AngularUni {
-  static render(component: Type, providers?) {
-    const renderer = AngularUni.getRenderer();
-    renderer.render(component, providers);
-  }
+import {Providers} from 'angular2-meteor';
 
-  static getRenderer() {
-    if (Meteor.isServer) {
-      return require('./server_renderer').ServerRenderer;
-    }
-    return require('./client_renderer').ClientRenderer;
-  }
+export interface ClientOptions {
+  debug?: boolean;
+}
+
+export interface ServerOptions {
+  debug?: boolean;
+  prebootStart?: boolean;
+  uglify?: boolean;
+  renderLimitMs?: number;
+  pageSizeLimitKb?: number;
+}
+
+export interface UniOptions {
+  client?: ClientOptions;
+  server?: ServerOptions;
+}
+
+export interface AngularUni {
+  render(component: Type, providers?: Providers, options?: UniOptions): void;
 }

@@ -1,5 +1,19 @@
 import { Type } from '@angular/core';
-export declare class AngularUni {
-    static render(component: Type, providers?: any): void;
-    static getRenderer(): any;
+import { Providers } from 'angular2-meteor';
+export interface ClientOptions {
+    debug?: boolean;
+}
+export interface ServerOptions {
+    debug?: boolean;
+    prebootStart?: boolean;
+    uglify?: boolean;
+    renderLimitMs?: number;
+    pageSizeLimitKb?: number;
+}
+export interface UniOptions {
+    client?: ClientOptions;
+    server?: ServerOptions;
+}
+export interface AngularUni {
+    render(component: Type, providers?: Providers, options?: UniOptions): void;
 }

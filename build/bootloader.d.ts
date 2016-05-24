@@ -1,11 +1,10 @@
 import { Type } from '@angular/core';
-import './runtime';
+import { Providers } from 'angular2-meteor';
+import { ServerOptions } from './angular_uni';
 export declare class Bootloader {
     private static platRef;
-    serialize(component: Type): string;
-    appProviders: any[];
-    private static platform;
-    private application(component, providers?);
-    private bootstrap(component);
+    serialize(component: Type, providers: Providers, options: ServerOptions): string;
+    getAppProviders(options?: ServerOptions): Providers;
+    private bootstrap(component, providers, options);
     private createDoc(component);
 }

@@ -46,30 +46,31 @@ import {
   serializeDocument
 } from 'angular2-universal';
 
-import {METEOR_PROVIDERS, MeteorApp} from 'angular2-meteor';
+import {METEOR_PROVIDERS, MeteorApp, Providers} from 'angular2-meteor';
 
-import './runtime';
+import {ServerOptions} from './angular_uni';
 import {waitRender, waitRouter} from './utils';
+import {Logger} from './logger';
 import {Router} from './router';
 import {MeteorXHRImpl} from './meteor_xhr_impl';
 
 export class Bootloader {
   private static platRef: PlatformRef;
 
-  serialize(component: Type): string {
+  serialize(component: Type,
+            providers: Providers,
+            options: ServerOptions): string {
     let future = new Future;
 
-    this.bootstrap(component).then(config => {
-      return waitRender(config.compRef).then(stable => {
-        config.stable = stable;
-        return config;
-      });
+    this.bootstrap(component, providers, options).then(config => {
+      return waitRender(config.compRef, options.renderLimitMs)
+        .then(stable => config);
     })
     .then(config => {
       let prebootCode = createPrebootCode(component, {
-        start: false,
-        debug: true,
-        uglify: false
+        start: options.prebootStart,
+        debug: options.debug,
+        uglify: options.uglify
       });
 
       return prebootCode
@@ -79,27 +80,36 @@ export class Bootloader {
           let prebootEl = DOM.createElement('div');
           DOM.setInnerHTML(prebootEl, code);
           DOM.insertAfter(el, prebootEl);
+          let logger = config.appRef.injector.get(Logger);
+          logger.debug('preboot source code rendered');
           return config;
         });
     })
     .then(config => {
       let document = config.appRef.injector.get(DOCUMENT);
       let html = serializeDocument(document);
-      if (config.stable) {
-        config.appRef.dispose();
+      let meteorApp = config.appRef.injector.get(MeteorApp);
+      let logger = config.appRef.injector.get(Logger);
+      let size = (html.length * 2 / 1024) >> 0;
+      logger.debug(`page has been serialized (size: ${size}kb)`);
+      if (size > options.pageSizeLimitKb) {
+        logger.warn(`page (size: ${size}kb) exceeded limit size ${options.pageSizeLimitKb}kb`);
       }
+      meteorApp.onStable(() => {
+        config.appRef.dispose();
+        logger.debug('page has been disposed');
+      });
       return html;
     })
     .then(html => future.return(html))
     .catch(err => {
-      console.log(err);
       future.throw(err);
     });
 
     return future.wait();
   }
 
-  get appProviders() {
+  getAppProviders(options?: ServerOptions): Providers {
     return [
       ...NODE_PLATFORM_PIPES,
       ...NODE_HTTP_PROVIDERS,
@@ -108,42 +118,29 @@ export class Bootloader {
       ...NODE_LOCATION_PROVIDERS,
       provide(ORIGIN_URL, { useValue: global.process.env.ROOT_URL }),
       provide(BASE_URL, { useValue: Router.baseUrl }),
-      new Provider(XHR, {
+      provide(XHR, {
         useFactory: (ngZone) => {
           return new MeteorXHRImpl(ngZone);
         },
         deps: [NgZone]
       }),
+      provide(Logger, { useValue: new Logger(Router.pathDef, options.debug) }),
       provide(REQUEST_URL, { useValue: Router.reqUrl })
     ];
   }
 
-  private static get platform(): PlatformRef {
-    let platRef = getPlatform();
-    if (isBlank(platRef)) {
-      let customProviders =
-        ReflectiveInjector.resolveAndCreate(buildNodeProviders());
-      platRef = createPlatform(customProviders);
-    }
-    return platRef;
-  }
-
-  private application(component: Type, providers?: any): any {
+  private bootstrap(component: Type,
+                    providers: Providers,
+                    options: ServerOptions) {
     let doc = this.createDoc(component);
-    let customProviders = buildNodeAppProviders(doc, providers);
-    var appinjector = ReflectiveInjector.resolveAndCreate(
-      customProviders,
-      Bootloader.platform.injector
-    );
-    return appinjector;
-  }
-
-  private bootstrap(component: Type) {
-    let appInjector = this.application(component, this.appProviders);
-    let appRef = appInjector.get(ApplicationRef);
-    let compRef = MeteorApp.launch(appRef, () =>
-      coreLoadAndBootstrap(appInjector, component));
-    return compRef.then(compRef => ({ appRef, compRef }));
+    let customProviders = buildNodeAppProviders(doc, this.getAppProviders(options));
+    customProviders = isPresent(providers) ? [...providers, ...customProviders]
+      : customProviders;
+    let bootstrapping = MeteorApp.bootstrap(component, buildNodeProviders(), customProviders);
+    return bootstrapping.then(compRef => ({
+      appRef: compRef.injector.get(ApplicationRef),
+      compRef
+    }));
   }
 
   private createDoc(component: Type) {

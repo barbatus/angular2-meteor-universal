@@ -10,7 +10,7 @@ import {Parties} from '../../../parties';
 
 @Component({
   selector: 'party-details',
-  templateUrl: 'imports/parties/party-details/party-details.html'
+  templateUrl: '/imports/parties/party-details/party-details.html'
 })
 export class PartyDetailsCmp extends MeteorComponent {
   party: Party;

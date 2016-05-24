@@ -1,8 +1,9 @@
 {
   "name": "angular2-meteor-universal",
   "version": "0.0.1",
-  "main": "build/angular_uni.js",
-  "typings": "build/angular_uni.d.ts",
+  "main": "build/angular_uni_server.js",
+  "browser": "build/angular_uni_client.js",
+  "typings": "build/index.d.ts",
   "repository": "https://github.com/barbatus/angular2-meteor-universal",
   "description": "Angular2-Universal for Meteor",
   "author": "Alex Borodach (https://github.com/barbatus)",

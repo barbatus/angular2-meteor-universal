@@ -10,7 +10,7 @@ import {Parties} from '../../../parties';
 
 @Component({
   selector: 'party-form',
-  templateUrl: 'imports/parties/party-form/party-form.html'
+  templateUrl: '/imports/parties/party-form/party-form.html'
 })
 export class PartyForm extends MeteorComponent {
   partyForm: ControlGroup;
