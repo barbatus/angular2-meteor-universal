@@ -14,7 +14,7 @@ import {PartyDetailsCmp} from './party-details/party-details';
 
 @Component({
   selector: 'socially',
-  templateUrl: '/imports/parties/layout.html',
+  template: '<router-outlet></router-outlet>',
   directives: [ROUTER_DIRECTIVES, PartiesCmp]
 })
 @RouteConfig([
