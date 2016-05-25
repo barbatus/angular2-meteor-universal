@@ -56,8 +56,8 @@ There are several points to be aware of for the proper usage of this library:
   that you can load separately at different `/parties` and `/todo` routes accordingly.
 
 - `bootstrap` method takes in bootstrapping options as the third parameter.
-  Check out all available options for the client and server as an interface here.
-  Default values of the options, you can find here.
+  Check out all available options for the client and server as interfaces [here](./modules/bootstrap.ts#L28).
+  Default values of the options, you can find [here](./modules/bootstrap_client.ts#L12) and [here](./modules/bootstrap_server.ts#L14).
   Some options that are worth mentioning:
     - `debug` - setting it to true will log out to the terminal a lot of useful,
       especially for the server, information such as time it takes to render a page
