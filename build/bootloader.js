@@ -26,11 +26,8 @@ var Bootloader = (function () {
                 .then(function (stable) { return config; });
         })
             .then(function (config) {
-            var prebootCode = angular2_universal_1.createPrebootCode(component, {
-                start: options.prebootStart,
-                debug: options.debug,
-                uglify: options.uglify
-            });
+            var preboot = _.extend({ debug: options.debug }, options.preboot);
+            var prebootCode = angular2_universal_1.createPrebootCode(component, preboot);
             return prebootCode
                 .then(function (code) {
                 var el = config.compRef.location.nativeElement;

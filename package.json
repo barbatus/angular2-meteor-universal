@@ -1,8 +1,15 @@
 {
   "name": "angular2-meteor-universal",
   "version": "0.0.1",
-  "main": "build/angular_uni_server.js",
-  "browser": "build/angular_uni_client.js",
+  "keywords": [
+    "meteor",
+    "angular2",
+    "angular2-universal",
+    "server-rendering",
+    "client-rendering"
+  ],
+  "main": "build/bootstrap_server.js",
+  "browser": "build/bootstrap_client.js",
   "typings": "build/index.d.ts",
   "repository": "https://github.com/barbatus/angular2-meteor-universal",
   "description": "Angular2-Universal for Meteor",
@@ -14,14 +21,14 @@
     "@angular/http": "2.0.0-rc.1",
     "@angular/platform-browser": "2.0.0-rc.1",
     "@angular/platform-server": "2.0.0-rc.1",
-    "angular2-universal": "^0.100.2",
+    "angular2-universal": "^0.101.3",
     "fibers": "^1.0.10",
     "fs": "0.0.2",
     "meteor-node-stubs": "^0.2.3",
     "meteor-promise": "^0.6.3",
     "parse5": "^1.5.0",
     "path": "^0.12.7",
-    "preboot": "^2.0.8"
+    "preboot": "^2.1.2"
   },
   "devDependencies": {
     "@angular/core": "2.0.0-rc.1",

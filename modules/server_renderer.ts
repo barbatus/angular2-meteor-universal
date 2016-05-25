@@ -8,17 +8,20 @@ import {Router} from './router';
 
 import {Bootloader} from './bootloader';
 
-import {ServerOptions} from './angular_uni';
-import {serverDefault} from './angular_uni_server';
+import {ServerOptions} from './bootstrap';
+import {serverDefault} from './bootstrap_server';
 
 export default class ServerRenderer {
   constructor(private options: ServerOptions = {}) {
-    this.options = _.defaults(options, serverDefault);
+    this.options = options;
+    _.defaults(this.options, serverDefault);
+    _.defaults(this.options.preboot, serverDefault.preboot);
   }
 
-  render(component, providers?: Providers): void {
+  render(component, providers?: Providers): string {
     let booloader = new Bootloader;
     let html = booloader.serialize(component, providers, this.options);
     Router.render(html);
+    return html;
   }
 }

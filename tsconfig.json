@@ -14,7 +14,8 @@
   },
   "files": [
     "modules/index.ts",
-    "modules/angular_uni.ts",
+    "modules/bootstrap_client.ts",
+    "modules/bootstrap_server.ts",
     "modules/client_renderer.ts",
     "modules/server_renderer.ts",
     "modules/meteor_xhr_impl.ts",

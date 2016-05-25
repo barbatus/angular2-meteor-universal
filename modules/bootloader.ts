@@ -48,7 +48,7 @@ import {
 
 import {METEOR_PROVIDERS, MeteorApp, Providers} from 'angular2-meteor';
 
-import {ServerOptions} from './angular_uni';
+import {ServerOptions} from './bootstrap';
 import {waitRender, waitRouter} from './utils';
 import {Logger} from './logger';
 import {Router} from './router';
@@ -67,11 +67,8 @@ export class Bootloader {
         .then(stable => config);
     })
     .then(config => {
-      let prebootCode = createPrebootCode(component, {
-        start: options.prebootStart,
-        debug: options.debug,
-        uglify: options.uglify
-      });
+      let preboot = _.extend({ debug: options.debug }, options.preboot);
+      let prebootCode = createPrebootCode(component, preboot);
 
       return prebootCode
         .then(code => {

@@ -1,4 +1,4 @@
-import {AngularUni, Router} from 'angular2-meteor-universal';
+import {bootstrap, Router} from 'angular2-meteor-universal';
 import {provide} from '@angular/core';
 import {ROUTER_PROVIDERS} from '@angular/router-deprecated';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
@@ -8,7 +8,7 @@ import {Socially} from './imports/parties/app';
 
 Router.route('/todo', {
   action: function(params) {
-    AngularUni.render(Todos, [], {server: { debug: true }});
+    bootstrap(Todos, [], {server: { debug: true }});
   }
 });
 
@@ -24,6 +24,6 @@ const parties = Router.group({
 
 parties.routes(['/', '/party/:partyId'], {
   action: function(params) {
-    AngularUni.render(Socially, partiesProviders, {server: { debug: true }});
+    bootstrap(Socially, partiesProviders, {server: { debug: true }});
   }
 });

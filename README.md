@@ -1,22 +1,38 @@
 # Angular2-Universal-Meteor
 
-Porting of Angular2-Universal for Angular2-Meteor based on FlowRouter.
+Server Side Rendering for Angular2-Meteor based on Angular2-Universal and FlowRouter.
 
 ## Usage
 
-There are several points to consider before using this library:
+There are several points to be aware of for the proper usage of this library:
 
-- These two Atmosphere packages are a prerequisite:
-  `angular2-runtime` and `kadira:flow-router-ssr`.
+- Installation of these two Atmosphere packages is a prerequisite:
+  `barbatus:angular2-runtime` and `kadira:flow-router-ssr`.
 
-- Angular 2 components that you want to render both on the client and server parts should be placed
+- Angular2-Universal-Meteor works in this way: at first, a component is rendered on the server
+  and then delivered to the client; at this moment Angular 2's bootstrapping kicks in 
+  against a hidden copy of this rendered DOM element; once Angular 2 is done with the rendering,
+  this 'live' (i.e., ready for the user iteraction) component becomes visible.
+
+- Angular 2 components that you want to render both on the client and server sides should be placed
   in the 'imports' folder and imported from there;
 
 - Routing is based on the FlowRouter package. In order to add routers, 
   create a `route.ts` file at the root level of your app and
   start adding URLs of the main Angular2 components you want to be pre-rendered on the server side.
   Use `Router.route` and `Router.group` to add routers and groups of the routes
-  as you can see here [route.ts](./examples/app/routes.ts);
+  as you can see here [route.ts](./examples/app/routes.ts).
+  Typical usage will be:
+  ```ts
+    import {Router, bootstrap} from 'angular2-universal-meteor';
+    import {Foo} from './imports/path/to/foo';
+
+    Router.route('/foo', {
+      action: function() {
+        bootstrap(Foo);
+      }
+    });
+  ```
 
 - If your main app component has own Angular 2 routing (i.e., based on `RouteConfig`),
   you'll need to create a FlowRouter's routing group, like [here](./examples/app/routes.ts#L21),
@@ -38,4 +54,6 @@ There are several points to consider before using this library:
   them on the server side, allows us to have multiple Angular 2 apps in one Meteor app structure.
   Please, check out a demo app in `example/app` folder that have two Angular 2, Socially and TODO, components
   that you can load separately at different `/parties` and `/todo` routes accordingly.
+
+
 
