@@ -31,14 +31,18 @@ function waitRender(compRef, waitMs) {
         ngZone.runOutsideAngular(function () {
             waitRouter(compRef).then(function () {
                 var waitHandler;
+                // TODO: convert onStable to EventEmitter
                 meteorApp.onStable(function () {
-                    time.assertStable();
-                    clearResolveTimeout(waitHandler);
-                    waitHandler = null;
-                    resolve(true);
+                    if (waitHandler) {
+                        time.assertStable();
+                        clearResolveTimeout(waitHandler);
+                        waitHandler = null;
+                        resolve(true);
+                    }
                 });
                 waitHandler = setTimeout(function () {
                     time.assertNotStable();
+                    waitHandler = null;
                     resolve(false);
                 }, waitMs);
             });

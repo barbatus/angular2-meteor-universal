@@ -38,7 +38,7 @@ There are several points to be aware of for the proper usage of this library:
   you'll need to create a FlowRouter's routing group, like [here](./examples/app/routes.ts#L21),
   and add paths that you want to pre-render on the server side.
   Please note that you'll need to set `target` attribute of the `a` links to either `_blank` or `_top`
-  in order to reload current page with a new component on it which has been pre-rendered on the server.
+  in order to reload current page with a new component on it, which has been pre-rendered on the server.
   Otherwise, Angular 2 will load components dynamically w/o reloading the page, thus,
   bypassing the server;
 
@@ -55,5 +55,27 @@ There are several points to be aware of for the proper usage of this library:
   Please, check out a demo app in `example/app` folder that have two Angular 2, Socially and TODO, components
   that you can load separately at different `/parties` and `/todo` routes accordingly.
 
+- `bootstrap` method takes in bootstrapping options as the third parameter.
+  Check out all available options for the client and server as an interface here.
+  Default values of the options, you can find here.
+  Some options that are worth mentioning:
+    - `debug` - setting it to true will log out to the terminal a lot of useful,
+      especially for the server, information such as time it takes to render a page
+      or size that page has;
+    - `renderLimitMs` - sets page render time limit.
+      If some page's component takes more time to render than this limit,
+      server will stop awaiting to be stable and serialize it to the client as is.
+      At this point you'll see a message like `[page_path]: page is not stable after renderLimitMs`.
+      > Please note that if you see this message too often for some particular page,
+      > you'll probably need to optimize it or increase its limit time.
+    - pageSizeLimitKb - sets page size limit.
+      If some page exceeds this limit you'll see a warning.
 
+- `Angular2-Universal` uses `Preboot` library to determine how server pre-rendered  
+  content will iteract with the user when Angular 2 component is still being bootstrapped.
+  For example, it can record all actions user makes on the content then replay them
+  on the 'live' components when they are ready.
+  There are several options available to configure this behaviour. Please check out `Preboot`
+  lib for more info, and use `preboot` option here to pass them to the `bootstrap` method.
+  Herd is default values.
 

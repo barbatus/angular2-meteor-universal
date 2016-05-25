@@ -9,6 +9,7 @@ export interface Preboot {
     replay?: string;
     buffer?: boolean;
     uglify?: boolean;
+    listen?: any;
     presets?: string[];
 }
 export interface ServerOptions {

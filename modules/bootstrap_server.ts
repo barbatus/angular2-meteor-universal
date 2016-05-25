@@ -25,7 +25,7 @@ export const serverDefault: ServerOptions = {
     // Client app will write to hidden div until bootstrap complete.
     buffer: true,
     uglify: !devMode,
-    listen: ['keyPress', 'buttonPress', 'focus']
+    presets: ['keyPress', 'buttonPress', 'focus']
   }
 };
 
