@@ -1,6 +1,6 @@
 # Angular2-Universal-Meteor
 
-Server Side Rendering for Angular2-Meteor based on Angular2-Universal and FlowRouter.
+Server Side Rendering for Angular2-Meteor based on [Angular2-Universal](https://github.com/angular/universal) and [FlowRouter](https://atmospherejs.com/kadira/flow-router).
 
 ## Usage
 
@@ -64,18 +64,14 @@ There are several points to be aware of for the proper usage of this library:
       or size that page has;
     - `renderLimitMs` - sets page render time limit.
       If some page's component takes more time to render than this limit,
-      server will stop awaiting to be stable and serialize it to the client as is.
+      server will stop awaiting this component to be stable and serialize it to the client as is.
       At this point you'll see a message like `[page_path]: page is not stable after renderLimitMs`.
-      > Please note that if you see this message too often for some particular page,
-      > you'll probably need to optimize it or increase its limit time.
-    - pageSizeLimitKb - sets page size limit.
+      *Please note that if you see this message too often for some particular page,
+      you'll probably need to optimize it or increase its limit time*.
+    - `pageSizeLimitKb` - sets page size limit.
       If some page exceeds this limit you'll see a warning.
 
-- `Angular2-Universal` uses `Preboot` library to determine how server pre-rendered  
-  content will iteract with the user when Angular 2 component is still being bootstrapped.
-  For example, it can record all actions user makes on the content then replay them
-  on the 'live' components when they are ready.
-  There are several options available to configure this behaviour. Please check out `Preboot`
-  lib for more info, and use `preboot` option here to pass them to the `bootstrap` method.
-  Herd is default values.
+- `Angular2-Universal` uses [`Preboot`](https://github.com/angular/universal/tree/master/modules/preboot) library to determine how server   pre-rendered content will iteract with the user when Angular 2 component is still being bootstrapped.
+  For example, it can record all actions user makes on the content then replay them on the 'live' components when they are ready.
+  There are several options available to configure this behaviour. Please check out `Preboot` lib for more info, and use `preboot` option [here](./modules/bootstrap.ts#L11) to pass them to the `bootstrap` method. [Here](./modules/bootstrap_server.ts#L18) is default values.
 
