@@ -7,12 +7,12 @@ Server Side Rendering for Angular2-Meteor based on Angular2-Universal and FlowRo
 There are several points to be aware of for the proper usage of this library:
 
 - Installation of these two Atmosphere packages is a prerequisite:
-  `barbatus:angular2-runtime` and `kadira:flow-router-ssr`.
+  `barbatus:angular2-runtime` and `kadira:flow-router-ssr`;
 
 - Angular2-Universal-Meteor works in this way: at first, a component is rendered on the server
-  and then delivered to the client; at this moment Angular 2's bootstrapping kicks in 
-  against a hidden copy of this rendered DOM element; once Angular 2 is done with the rendering,
-  this 'live' (i.e., ready for the user iteraction) component becomes visible.
+  and then delivered to the client; at that moment Angular 2's bootstrapping kicks in 
+  against a hidden copy of the rendered DOM element; once Angular 2 is done with the rendering,
+  this "live" (i.e., ready for the user iteraction) component becomes visible.
 
 - Angular 2 components that you want to render both on the client and server sides should be placed
   in the 'imports' folder and imported from there;
@@ -50,7 +50,7 @@ There are several points to be aware of for the proper usage of this library:
   so they take same parameters as original methods. If want to use other methods of the `FlowRouter`'s API ,
   do it in the same way as described in the `FlowRouter` [docs](https://github.com/kadirahq/flow-router);
 
-- Having ability to define different routes for different Angular 2 components and pre-render
+- Having the ability to define different routes for different Angular 2 components and pre-render
   them on the server side, allows us to have multiple Angular 2 apps in one Meteor app structure.
   Please, check out a demo app in `example/app` folder that have two Angular 2, Socially and TODO, components
   that you can load separately at different `/parties` and `/todo` routes accordingly.
