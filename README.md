@@ -71,6 +71,6 @@ There are several points to be aware of for the proper usage of this library:
       If some page exceeds this limit you'll see a warning.
 
 - `Angular2-Universal` uses [`Preboot`](https://github.com/angular/universal/tree/master/modules/preboot) library to determine how server   pre-rendered content will iteract with the user when Angular 2 component is still being bootstrapped.
-  For example, it can record all actions user makes on the content then replay them on the 'live' components when they are ready.
-  There are several options available to configure this behaviour. Please check out `Preboot` lib for more info, and use `preboot` option [here](./modules/bootstrap.ts#L11) to pass them to the `bootstrap` method. [Here](./modules/bootstrap_server.ts#L18) is default values.
+  For example, it can record all actions user makes on the content then replay them on the "live" components when they are ready.
+  There are several options available to configure this behaviour. Please, check out [`Preboot`](https://github.com/angular/universal/tree/master/modules/preboot) lib for more info, and use `preboot` option [here](./modules/bootstrap.ts#L11) to pass them to the `bootstrap` method. [Here](./modules/bootstrap_server.ts#L18) is default values.
 
