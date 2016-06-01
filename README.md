@@ -6,18 +6,17 @@ Server Side Rendering for Angular2-Meteor based on [Angular2-Universal](https://
 
 There are several points to be aware of for the proper usage of this library:
 
-- Installation of these two Atmosphere packages is a prerequisite:
-  `barbatus:angular2-runtime` and `kadira:flow-router-ssr`;
+- Installation of `kadira:flow-router-ssr` is a prerequisite;
 
 - Angular2-Universal-Meteor works in this way: at first, a component is rendered on the server
   and then delivered to the client; at that moment Angular 2's bootstrapping kicks in 
-  against a hidden copy of the rendered DOM element; once Angular 2 is done with the rendering,
-  this "live" (i.e., ready for the user iteraction) component becomes visible.
+  against a hidden copy of the server pre-rendered DOM element; once Angular 2 is done with the client rendering,
+  this "live" (i.e., ready for user iteractions) component becomes visible, while server pre-rendered element is removed;
 
 - Angular 2 components that you want to render both on the client and server sides should be placed
-  in the 'imports' folder and imported from there;
+  in the 'imports' folder and imported from there (check out a demo app in `examples/app`);
 
-- Routing is based on the FlowRouter package. In order to add routers, 
+- Routing is based on the FlowRouter package. In order to add routers,
   create a `route.ts` file at the root level of your app and
   start adding URLs of the main Angular2 components you want to be pre-rendered on the server side.
   Use `Router.route` and `Router.group` to add routers and groups of the routes
@@ -44,7 +43,7 @@ There are several points to be aware of for the proper usage of this library:
 
 - If you want to render some component on the client side only, then you
   need to work with the `client` folder as most of you do regularly by 
-  putting there Angular 2 components, and also create `routes.ts` there with client side routes;
+  putting there Angular 2 components, and also create `routes.ts` there with routes that are supposed to be client side solely;
 
 - `Router.route` and `Router.group` are only wrappers over analogous methods of  `FlowRouter`, 
   so they take same parameters as original methods. If want to use other methods of the `FlowRouter`'s API ,
@@ -52,8 +51,8 @@ There are several points to be aware of for the proper usage of this library:
 
 - Having the ability to define different routes for different Angular 2 components and pre-render
   them on the server side, allows us to have multiple Angular 2 apps in one Meteor app structure.
-  Please, check out a demo app in `example/app` folder that have two Angular 2, Socially and TODO, components
-  that you can load separately at different `/parties` and `/todo` routes accordingly.
+  Please, check out a demo app in `example/app` folder that have two Angular 2 - *Socially* and *TODO* - components,
+  which are loaded separately at different - `/parties` and `/todo` - routes accordingly.
 
 - `bootstrap` method takes in bootstrapping options as the third parameter.
   Check out all available options for the client and server as interfaces [here](./modules/bootstrap.ts#L28).
@@ -67,7 +66,7 @@ There are several points to be aware of for the proper usage of this library:
       server will stop awaiting this component to be stable and serialize it to the client as is.
       At this point you'll see a message like `[page_path]: page is not stable after renderLimitMs`.
       *Please note that if you see this message too often for some particular page,
-      you'll probably need to optimize it or increase its limit time*.
+      you'll probably need to optimize it or increase the rendering limit time*.
     - `pageSizeLimitKb` - sets page size limit.
       If some page exceeds this limit you'll see a warning.
 
