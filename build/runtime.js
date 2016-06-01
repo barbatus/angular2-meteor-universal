@@ -4,8 +4,6 @@ var fiber_pool_1 = require('meteor-promise/fiber_pool');
 var Promise = require('promise');
 Promise.Fiber = Fiber;
 var fiberPool = fiber_pool_1.makePool();
-require('zone.js/dist/zone-node');
-require('zone.js/dist/long-stack-trace-zone');
 // This is probably bad running everything in fibers.
 // We only need to make MeteorPromise zone-aware.
 var dynamics = null;

@@ -6,9 +6,6 @@ import * as Promise from 'promise';
 Promise.Fiber = Fiber;
 const fiberPool = makePool();
 
-import 'zone.js/dist/zone-node';
-import 'zone.js/dist/long-stack-trace-zone';
-
 // This is probably bad running everything in fibers.
 // We only need to make MeteorPromise zone-aware.
 let dynamics = null;

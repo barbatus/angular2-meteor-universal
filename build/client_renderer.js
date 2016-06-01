@@ -22,6 +22,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ClientRenderer;
 function bootstrap(component, providers, options) {
     providers = (providers || []).concat(core_1.provide(common_1.APP_BASE_HREF, { useValue: router_1.Router.baseUrl }), core_1.provide(angular2_universal_1.BASE_URL, { useValue: router_1.Router.baseUrl }));
+    // TODO: give a change to render component here even
+    // if server has failed.
     return new Promise(function (resolve, reject) {
         Meteor.startup(function () {
             angular2_meteor_auto_bootstrap_1.bootstrap(component, providers)

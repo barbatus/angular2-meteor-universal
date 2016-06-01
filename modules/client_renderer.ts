@@ -30,6 +30,9 @@ export function bootstrap(component: Type,
     provide(APP_BASE_HREF, { useValue: Router.baseUrl }),
     provide(BASE_URL, { useValue: Router.baseUrl }));
 
+  // TODO: give a change to render component here even
+  // if server has failed.
+
   return new Promise((resolve, reject) => {
     Meteor.startup(() => {
       origBoot(component, providers)

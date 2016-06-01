@@ -1,4 +1,5 @@
 'use strict';
+require('angular2-meteor-polyfills');
 require('./runtime');
 var router_1 = require('./router');
 var bootloader_1 = require('./bootloader');

@@ -1,3 +1,4 @@
+import 'angular2-meteor-polyfills';
 import './runtime';
 import { Providers } from 'angular2-meteor';
 import { ServerOptions } from './bootstrap';
