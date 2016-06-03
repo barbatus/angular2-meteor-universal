@@ -20,6 +20,11 @@ var Bootloader = (function () {
     function Bootloader() {
     }
     Bootloader.prototype.serialize = function (component, providers, options) {
+        if (!options.on) {
+            var doc = this.createDoc(component);
+            var html = angular2_universal_1.serializeDocument(doc);
+            return html;
+        }
         var future = new Future;
         this.bootstrap(component, providers, options).then(function (config) {
             return utils_1.waitRender(config.compRef, options.renderLimitMs)
@@ -41,8 +46,8 @@ var Bootloader = (function () {
             });
         })
             .then(function (config) {
-            var document = config.appRef.injector.get(platform_browser_1.DOCUMENT);
-            var html = angular2_universal_1.serializeDocument(document);
+            var doc = config.appRef.injector.get(platform_browser_1.DOCUMENT);
+            var html = angular2_universal_1.serializeDocument(doc);
             var meteorApp = config.appRef.injector.get(angular2_meteor_1.MeteorApp);
             var logger = config.appRef.injector.get(logger_1.Logger);
             var size = (html.length * 2 / 1024) >> 0;

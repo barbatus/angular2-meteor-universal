@@ -13,6 +13,7 @@ const devMode = assertionsEnabled();
 
 export const serverDefault: ServerOptions = {
   debug: false,
+  on: true,
   renderLimitMs: 1000,
   pageSizeLimitKb: 500,
   preboot: {

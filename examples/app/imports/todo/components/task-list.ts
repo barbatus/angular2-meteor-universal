@@ -2,8 +2,6 @@ import {Component, Input, OnChanges} from '@angular/core';
 
 import {Mongo} from 'meteor/mongo';
 
-import './task.ts';
-
 import {TaskView} from './task';
 
 import {MeteorComponent} from 'angular2-meteor';

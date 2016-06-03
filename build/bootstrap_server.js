@@ -7,6 +7,7 @@ var server_renderer_1 = require('./server_renderer');
 var devMode = lang_1.assertionsEnabled();
 exports.serverDefault = {
     debug: false,
+    on: true,
     renderLimitMs: 1000,
     pageSizeLimitKb: 500,
     preboot: {

@@ -7,8 +7,6 @@ import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Mongo} from 'meteor/mongo';
 import {ReactiveVar} from 'meteor/reactive-var';
 
-import '../party-form/party-form.ts';
-
 import {PartyForm} from '../party-form/party-form';
 
 import {MeteorComponent} from 'angular2-meteor';

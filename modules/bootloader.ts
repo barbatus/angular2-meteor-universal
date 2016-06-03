@@ -60,8 +60,14 @@ export class Bootloader {
   serialize(component: Type,
             providers: Providers,
             options: ServerOptions): string {
-    let future = new Future;
 
+    if (!options.on) {
+      let doc = this.createDoc(component);
+      let html = serializeDocument(doc);
+      return html;
+    }
+
+    let future = new Future;
     this.bootstrap(component, providers, options).then(config => {
       return waitRender(config.compRef, options.renderLimitMs)
         .then(stable => config);
@@ -83,8 +89,8 @@ export class Bootloader {
         });
     })
     .then(config => {
-      let document = config.appRef.injector.get(DOCUMENT);
-      let html = serializeDocument(document);
+      let doc = config.appRef.injector.get(DOCUMENT);
+      let html = serializeDocument(doc);
       let meteorApp = config.appRef.injector.get(MeteorApp);
       let logger = config.appRef.injector.get(Logger);
       let size = (html.length * 2 / 1024) >> 0;

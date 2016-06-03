@@ -1,6 +1,7 @@
 'use strict';
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var directive_resolver_1 = require('@angular/compiler/src/directive_resolver');
 var angular2_meteor_1 = require('angular2-meteor');
 var logger_1 = require('./logger');
 function waitRouter(compRef) {
@@ -51,3 +52,8 @@ function waitRender(compRef, waitMs) {
 }
 exports.waitRender = waitRender;
 ;
+function resolve(component) {
+    var elem = new directive_resolver_1.DirectiveResolver().resolve(component);
+    return elem && elem.selector;
+}
+exports.resolve = resolve;

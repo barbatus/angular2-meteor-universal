@@ -14,6 +14,7 @@ export interface Preboot {
 }
 export interface ServerOptions {
     debug?: boolean;
+    on?: boolean;
     renderLimitMs?: number;
     pageSizeLimitKb?: number;
     preboot?: Preboot;

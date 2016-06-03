@@ -20,6 +20,8 @@ export interface Preboot {
 
 export interface ServerOptions {
   debug?: boolean;
+  // Turn on/off server rendering
+  on?: boolean;
   renderLimitMs?: number;
   pageSizeLimitKb?: number;
   preboot?: Preboot;

@@ -1,6 +1,6 @@
 'use strict';
 
-import {ComponentRef, NgZone, Testability} from '@angular/core';
+import {ComponentRef, NgZone, Testability, Type} from '@angular/core';
 import {Router as NgRouter} from '@angular/router-deprecated';
 import {Http} from '@angular/http';
 import {ObservableWrapper, TimerWrapper} from '@angular/core/src/facade/async';
@@ -8,6 +8,7 @@ import {
   scheduleMicroTask,
   assertionsEnabled
 } from '@angular/core/src/facade/lang';
+import {DirectiveResolver} from '@angular/compiler/src/directive_resolver';
 
 import {REQUEST_URL, BASE_URL} from 'angular2-universal';
 
@@ -66,3 +67,8 @@ export function waitRender(compRef: ComponentRef<any>,
     });
   });
 };
+
+export function resolve(component: Type): string {
+  let elem = new DirectiveResolver().resolve(component);
+  return elem && elem.selector;
+}

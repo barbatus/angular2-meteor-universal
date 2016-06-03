@@ -1,6 +1,10 @@
 'use strict';
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
+var browser_adapter_1 = require('@angular/platform-browser/src/browser/browser_adapter');
+browser_adapter_1.BrowserDomAdapter.makeCurrent();
+var dom_adapter_1 = require('@angular/platform-browser/src/dom/dom_adapter');
+var DOM = dom_adapter_1.getDOM();
 var angular2_universal_1 = require('angular2-universal');
 var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
 var angular2_meteor_1 = require('angular2-meteor');
@@ -22,8 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ClientRenderer;
 function bootstrap(component, providers, options) {
     providers = (providers || []).concat(core_1.provide(common_1.APP_BASE_HREF, { useValue: router_1.Router.baseUrl }), core_1.provide(angular2_universal_1.BASE_URL, { useValue: router_1.Router.baseUrl }));
-    // TODO: give a change to render component here even
-    // if server has failed.
+    var selector = utils_1.resolve(component);
+    if (!DOM.querySelector(document, selector)) {
+        return bootstrapClient(component, providers, options);
+    }
+    return bootstrapPreboot(component, providers, options);
+}
+exports.bootstrap = bootstrap;
+function bootstrapPreboot(component, providers, options) {
     return new Promise(function (resolve, reject) {
         Meteor.startup(function () {
             angular2_meteor_auto_bootstrap_1.bootstrap(component, providers)
@@ -40,7 +50,12 @@ function bootstrap(component, providers, options) {
         });
     });
 }
-exports.bootstrap = bootstrap;
+function bootstrapClient(component, providers, options) {
+    var selector = utils_1.resolve(component);
+    var el = DOM.createElement(selector);
+    DOM.appendChild(document.body, el);
+    return angular2_meteor_auto_bootstrap_1.bootstrap(component, providers);
+}
 var Preboot = (function () {
     function Preboot() {
     }
