@@ -20,7 +20,7 @@ There are several points to be aware of for the proper usage of this library:
   create a `route.ts` file at the root level of your app and
   start adding URLs of the main Angular2 components you want to be pre-rendered on the server side.
   Use `Router.route` and `Router.group` to add routers and groups of the routes
-  as you can see here [route.ts](./examples/app/routes.ts).
+  as you can see here [route.ts](./examples/app/server/routes.ts).
   Typical usage will be:
   ```ts
     import {Router, bootstrap} from 'angular2-universal-meteor';
@@ -34,7 +34,7 @@ There are several points to be aware of for the proper usage of this library:
   ```
 
 - If your main app component has own Angular 2 routing (i.e., based on `RouteConfig`),
-  you'll need to create a FlowRouter's routing group, like [here](./examples/app/routes.ts#L21),
+  you'll need to create a FlowRouter's routing group, like [here](./examples/app/server/routes.ts#L7),
   and add paths that you want to pre-render on the server side.
   Please note that you'll need to set `target` attribute of the `a` links to either `_blank` or `_top`
   in order to reload current page with a new component on it, which has been pre-rendered on the server.
@@ -47,7 +47,7 @@ There are several points to be aware of for the proper usage of this library:
 
 - Note that sometimes it makes sense to keep only basic components in the `imports` folder,
   extending them on the client (server) with some specific only to the client functionality.
-  Doing so will let you to avoid unexpected errors and compiler cursing, since every component put in `imports` should use API available on the both sides. Please, check how it's done in the Socially part of the demo app.
+  Doing so will let you to avoid unexpected errors and compiler cursing, since every component put in `imports` should use API available on the both sides. Please, check how it's done in the Socially [part](./examples/app/client/parties) of the demo app.
 
 - `Router.route` and `Router.group` are only wrappers over analogous methods of  `FlowRouter`, 
   so they take same parameters as original methods. If want to use other methods of the `FlowRouter`'s API ,
