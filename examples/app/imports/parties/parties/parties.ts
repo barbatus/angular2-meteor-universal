@@ -1,6 +1,6 @@
 'use strict';
 
-import {Component, NgZone} from '@angular/core';
+import {Component} from '@angular/core';
 
 import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
@@ -19,10 +19,10 @@ import {Parties} from '../../../parties';
   directives: [ROUTER_DIRECTIVES, PartyForm]
 })
 export class PartiesCmp extends MeteorComponent {
-  parties: Mongo.Cursor<Party>;
-  location: ReactiveVar<String>;
+  protected parties: Mongo.Cursor<Party>;
+  protected location: ReactiveVar<String>;
 
-  constructor(ngZone: NgZone) {
+  constructor() {
     super();
 
     this.subscribe('parties', 'Palo Alto');
@@ -32,14 +32,5 @@ export class PartiesCmp extends MeteorComponent {
       var selector = { location: this.location.get() };
       this.parties = Parties.find(selector);
     });
-  }
-
-  searchLocation(location) {
-    this.subscribe('parties', location, () => {
-      if (!this.parties.count()) {
-        alert('Nothing found');
-      }
-    });
-    this.location.set(location);
   }
 }
