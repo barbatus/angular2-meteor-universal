@@ -45,6 +45,12 @@ There are several points to be aware of for the proper usage of this library:
   need to work with the `client` folder as most of you do regularly by 
   putting there Angular 2 components, and also create `routes.ts` there with routes that are supposed to be client side solely;
 
+- Note that it makes sense to keep basic versions of the components in the `imports` folder, and
+  extends them on the client with some specific only to the client functionality
+  Doing in this way will let you to avoid unexpected errors and compiler cursing,
+  since every component placed in `imports` should use API available on the every side.
+  Please, check how it's done in the Socially part of the demo app.
+
 - `Router.route` and `Router.group` are only wrappers over analogous methods of  `FlowRouter`, 
   so they take same parameters as original methods. If want to use other methods of the `FlowRouter`'s API ,
   do it in the same way as described in the `FlowRouter` [docs](https://github.com/kadirahq/flow-router);
