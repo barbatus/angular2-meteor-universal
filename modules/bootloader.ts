@@ -26,7 +26,7 @@ import {getDOM} from '@angular/platform-browser/src/dom/dom_adapter';
 const DOM: any = getDOM();
 import {isPresent, isBlank} from '@angular/core/src/facade/lang';
 
-import * as Future from 'fibers/future';
+//import * as Future from 'fibers/future';
 
 import {
   NODE_ROUTER_PROVIDERS,
@@ -53,6 +53,8 @@ import {waitRender, waitRouter} from './utils';
 import {Logger} from './logger';
 import {Router} from './router';
 import {MeteorXHRImpl} from './meteor_xhr_impl';
+
+const Future = Npm.require('fibers/future');
 
 export class Bootloader {
   private static platRef: PlatformRef;
