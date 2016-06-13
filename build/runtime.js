@@ -1,35 +1,37 @@
 'use strict';
-var Fiber = require('fibers');
-var fiber_pool_1 = require('meteor-promise/fiber_pool');
-var Promise = require('promise');
-Promise.Fiber = Fiber;
-var fiberPool = fiber_pool_1.makePool();
-// This is probably bad running everything in fibers.
-// We only need to make MeteorPromise zone-aware.
-var dynamics = null;
-function runZoneInFiber(method, context, params) {
-    if (!Fiber.current) {
-        var result = void 0;
-        // Using fibers from MeteorPromise fiber pool.
-        return fiberPool.run({
-            callback: method,
-            context: context,
-            args: params,
-            dynamics: dynamics
-        }, Promise).then(function (result) { return result; });
-    }
-    return method.apply(context, params);
-}
-var ZP = Zone['prototype'];
-var runTask = ZP.runTask;
-ZP.runTask = function (task, applyThis, applyArgs) {
-    return runZoneInFiber(runTask, this, [task, applyThis, applyArgs]);
-};
-var run = ZP.run;
-ZP.run = function (callback, applyThis, applyArgs, source) {
-    return runZoneInFiber(run, this, [callback, applyThis, applyArgs, source]);
-};
-var runGuarded = ZP.runGuarded;
-ZP.runGuarded = function (callback, applyThis, applyArgs, source) {
-    return runZoneInFiber(runGuarded, this, [callback, applyThis, applyArgs, source]);
-};
+// import * as Fiber from 'fibers';
+// import {makePool} from 'meteor-promise/fiber_pool';
+// import * as Promise from 'promise';
+// Promise.Fiber = Fiber;
+// const fiberPool = makePool();
+// // This is probably bad running everything in fibers.
+// // We only need to make MeteorPromise zone-aware.
+// let dynamics = null;
+// function runZoneInFiber(method, context, params) {
+//   if (!Fiber.current) {
+//     let result;
+//     // Using fibers from MeteorPromise fiber pool.
+//     return fiberPool.run({
+//       callback: method,
+//       context: context,
+//       args: params,
+//       dynamics: dynamics
+//     }, Promise).then(result => result);
+//   }
+//   return method.apply(context, params);
+// }
+// let ZP = Zone['prototype'];
+// const runTask = ZP.runTask;
+// ZP.runTask = function(task: Task, applyThis?: any, applyArgs?: any): any {
+//   return runZoneInFiber(runTask, this, [task, applyThis, applyArgs]);
+// };
+// const run = ZP.run;
+// ZP.run = function(callback: Function, applyThis?: any,
+//                   applyArgs?: any[], source?: string): any {
+//   return runZoneInFiber(run, this, [callback, applyThis, applyArgs, source]);
+// };
+// const runGuarded = ZP.runGuarded;
+// ZP.runGuarded = function(callback: Function, applyThis?: any,
+//                          applyArgs?: any[], source?: string): any {
+//   return runZoneInFiber(runGuarded, this, [callback, applyThis, applyArgs, source]);
+// };

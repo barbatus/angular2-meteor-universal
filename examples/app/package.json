@@ -7,7 +7,6 @@
     "angular2-meteor": "https://github.com/Urigo/angular2-meteor",
     "angular2-meteor-auto-bootstrap": "https://github.com/Urigo/angular2-meteor-auto-bootstrap",
     "angular2-meteor-universal": "file:../..",
-    "core-js": "^2.4.0",
     "es6-shim": "^0.35.0",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.6",
