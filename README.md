@@ -78,3 +78,9 @@ There are several points to be aware of for the proper usage of this library:
   For example, it can record all actions user makes on the content then replay them on the "live" components when they are ready.
   There are several options available to configure this behaviour. Please, check out [`Preboot`](https://github.com/angular/universal/tree/master/modules/preboot) lib for more info, and use `preboot` option [here](./modules/bootstrap.ts#L11) to pass them to the `bootstrap` method. [Here](./modules/bootstrap_server.ts#L18) is default values.
 
+## Demo
+
+Demo from `examples/app` is deployed at https://ng2-ssr.herokuapp.com. Check out Socially and TODO links at
+https://ng2-ssr.herokuapp.com/todo and https://ng2-ssr.herokuapp.com/parties.
+
+Deployed repo - https://github.com/barbatus/ng2-ssr-demo.
